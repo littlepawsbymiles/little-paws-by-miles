@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Litters | Upcoming &amp; Past Kitten Litters | Little Paws By Miles</title>
+  <meta name="description" content="Our upcoming and past Ragdoll, Maine Coon and British Shorthair kitten litters at Little Paws By Miles. See what's planned, hear about recent litters, and join our informal waitlist.">
+  <meta name="keywords" content="upcoming litters, past litters, Ragdoll litter UK, Maine Coon litter Yorkshire, British Shorthair litter Leeds, kitten waitlist UK, kitten reservation, Ragdoll kittens Leeds">
+  <meta name="author" content="Little Paws By Miles">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://littlepawsbymiles.co.uk/litters.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Little Paws By Miles">
+  <meta property="og:title" content="Litters | Upcoming &amp; Past Kitten Litters | Little Paws By Miles">
+  <meta property="og:description" content="Upcoming and past kitten litters at Little Paws By Miles. Leeds-based, responsibly bred Ragdolls, Maine Coons and British Shorthair.">
+  <meta property="og:url" content="https://littlepawsbymiles.co.uk/litters.html">
+  <meta property="og:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
+  <meta property="og:locale" content="en_GB">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Litters | Upcoming &amp; Past">
+  <meta name="twitter:description" content="Upcoming and past kitten litters at Little Paws By Miles.">
+  <meta name="twitter:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="apple-touch-icon" href="images/logo.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="litters">
+  <div id="site-header-placeholder"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Past &amp; Upcoming</span>
+        <h1>Our Litters</h1>
+        <p>A look at the litters we're expecting and those we've raised. Nothing is announced ahead of time. Colours, numbers and availability are always confirmed after the kittens arrive and have had a proper vet check.</p>
+      </div>
+    </section>
+
+    <!-- Upcoming litters -->
+    <section>
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">On the Way</span>
+          <h2>Upcoming</h2>
+          <p>What we're expecting in the weeks and months ahead.</p>
+        </div>
+        <div id="upcoming-litters-root"></div>
+      </div>
+    </section>
+
+    <!-- Past litters -->
+    <section class="section-tinted">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Our Track Record</span>
+          <h2>Past litters</h2>
+          <p>A few words about recent litters who've gone on to their new homes.</p>
+        </div>
+        <div id="past-litters-root"></div>
+      </div>
+    </section>
+
+    <!-- Waitlist / CTA -->
+    <section>
+      <div class="container container-narrow">
+        <div class="form-container">
+          <span class="eyebrow">Stay in the Loop</span>
+          <h2>Join our informal waitlist</h2>
+          <p>We keep a small, informal waitlist rather than a ticketed queue. We'll always have a proper conversation before anything is decided. The right home matters as much to us as the right kitten.</p>
+          <div id="enquiry-form-root" data-form-type="waitlist"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-placeholder"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/partials.js"></script>
+  <script src="js/enquiry-form.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLitters('upcoming-litters-root', 'Upcoming');
+      renderLitters('past-litters-root', 'Past');
+      renderEnquiryForm('enquiry-form-root');
+    });
+  </script>
+</body>
+</html>

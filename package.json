@@ -1,0 +1,13 @@
+{
+  "name": "little-paws-by-miles",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static website for Little Paws By Miles, UK cat breeder.",
+  "scripts": {
+    "build": "node scripts/build-data.js",
+    "migrate": "node scripts/migrate.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

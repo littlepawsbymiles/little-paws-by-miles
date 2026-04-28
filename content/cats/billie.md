@@ -1,0 +1,17 @@
+---
+order: 5
+id: billie
+name: Billie
+breed: Maine Coon
+role: Queen
+colour: Black Smoke Tortie
+registration: TICA Registered
+tagline: A dramatic smoke tortie coat and a calm, confident nature.
+siblings:
+  - tilly
+photos: []
+---
+
+Billie is Tilly's sister, and while they share bloodlines (with championships behind them), the two girls are quite different in temperament.
+
+Billie's coat is the dramatic one. Black smoke tortie, with soft smoky undertones that catch the light beautifully. She's a good mix of playful and gentle. Happy to muck about, but just as happy to settle in close for a quiet evening. There's a calm confidence to her that we really like.

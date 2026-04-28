@@ -1,0 +1,9 @@
+# Cloudflare Worker config — edit the fields below before deploying.
+# Don't put secrets here — those go in the Cloudflare dashboard.
+
+name = "lp-form-handler"
+main = "form-handler.js"
+compatibility_date = "2024-12-01"
+
+# Optional: pin the Worker to your account's subdomain by uncommenting:
+# workers_dev = true

@@ -1,0 +1,243 @@
+# ============================================================================
+#  Decap CMS configuration — Little Paws By Miles
+# ----------------------------------------------------------------------------
+#  This file defines what the admin panel looks like for editors.
+#  Every "collection" below becomes a section in the left-hand sidebar of
+#  the admin. Every "field" becomes a form field in the editor.
+#
+#  If you (the site owner) ever want to add a new field to, say, cats, add it
+#  here AND add it to scripts/build-data.js so it flows through to the site.
+# ============================================================================
+
+# Where content gets saved and who can save it.
+# "github" backend = editors authenticate with a GitHub account and commits go
+# into your repo. We'll fill in REPO_OWNER/REPO_NAME once the repo is created.
+backend:
+  name: github
+  repo: REPO_OWNER/REPO_NAME              # ← replace after creating the GitHub repo
+  branch: main
+  # Optional: open_authoring lets editors submit changes via pull request
+  # without direct repo access. Keep off for now (all editors are trusted).
+
+# Editorial workflow enables draft/review/publish stages.
+# For a small family team, simple publish is fine.
+publish_mode: simple
+
+# Where uploaded media files end up (relative to the site root).
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+# Site URL for preview links after saving.
+site_url: https://littlepawsbymiles.co.uk
+display_url: littlepawsbymiles.co.uk
+logo_url: https://littlepawsbymiles.co.uk/images/logo.png
+
+# ---- UK-friendly niceties ----
+locale: 'en'
+slug:
+  encoding: 'ascii'
+  clean_accents: true
+  sanitize_replacement: '-'
+
+
+# ============================================================================
+#  COLLECTIONS — each one appears as a section in the admin sidebar.
+# ============================================================================
+collections:
+
+  # --------------------------------------------------------------------------
+  #  CATS — queens and studs
+  # --------------------------------------------------------------------------
+  - name: 'cats'
+    label: 'Cats (queens & studs)'
+    label_singular: 'Cat'
+    folder: 'content/cats'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{name}} — {{breed}} {{role}}'
+    sortable_fields: ['order', 'name', 'breed', 'role']
+    view_groups:
+      - label: By breed
+        field: breed
+      - label: By role
+        field: role
+    fields:
+      - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0, hint: 'Lower numbers appear first on the Meet the Cats page.'}
+      - {label: 'ID (URL slug)', name: 'id', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used in the URL. e.g. 'bella'. Don't change this for existing cats — it will break bookmarks."}
+      - {label: 'Name', name: 'name', widget: 'string'}
+      - {label: 'Registered (full) name', name: 'registeredName', widget: 'string', required: false, hint: "Full pedigree name, if the cat has one. e.g. 'Bluemaines Danzis Starsky'. Leave blank for unregistered cats."}
+      - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
+      - {label: 'Role', name: 'role', widget: 'select', options: ['Queen', 'Stud']}
+      - {label: 'Colour / pattern', name: 'colour', widget: 'string', hint: "e.g. 'Blue Point', 'Lilac Lynx', 'Black Silver Mackerel Tabby'"}
+      - {label: 'Registration', name: 'registration', widget: 'string', required: false, hint: "e.g. 'GCCF Registered' or 'GCCF & TICA Dual Registered · GCCF Stud Register'. Leave blank if unregistered."}
+      - {label: 'Date of birth', name: 'dob', widget: 'string', required: false, hint: "e.g. '2 April 2023'. Shown on stud profiles where useful."}
+      - {label: 'GCCF Stud Register URL', name: 'studRegisterUrl', widget: 'string', required: false, hint: "If this cat is listed on the GCCF Stud Register, paste the URL here. A button will appear on their profile."}
+      - {label: 'Tagline (short, 1 sentence)', name: 'tagline', widget: 'string', hint: 'Shown on the cat card under the name.'}
+      - label: 'Siblings'
+        name: 'siblings'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        multiple: true
+        required: false
+        hint: 'Other cats that share a parent. Shown as clickable "Sister to…" links on the profile.'
+      - label: 'Photos'
+        name: 'photos'
+        widget: 'list'
+        required: false
+        summary: '{{fields.image}}'
+        field: {label: 'Photo', name: 'image', widget: 'image'}
+        hint: 'First photo is the main card/hero image. Upload square-ish images for best results.'
+      - label: 'About (full description)'
+        name: 'body'
+        widget: 'markdown'
+        hint: 'Full description shown on the cat profile page. Use paragraphs to break up text.'
+
+  # --------------------------------------------------------------------------
+  #  KITTENS — currently available for sale
+  # --------------------------------------------------------------------------
+  - name: 'kittens'
+    label: 'Available kittens'
+    label_singular: 'Kitten'
+    folder: 'content/kittens'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{name}} — {{breed}} {{sex}} ({{status}})'
+    sortable_fields: ['order', 'name', 'breed']
+    fields:
+      - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0}
+      - {label: 'Name', name: 'name', widget: 'string', hint: 'Give each kitten a placeholder name to help buyers choose.'}
+      - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
+      - {label: 'Sex', name: 'sex', widget: 'select', options: ['Male', 'Female']}
+      - {label: 'Colour / pattern', name: 'colour', widget: 'string'}
+      - {label: 'Price', name: 'price', widget: 'string', required: false, hint: "e.g. '£1,200' — include the £ sign."}
+      - {label: 'Status', name: 'status', widget: 'select', options: ['Available', 'Reserved'], default: 'Available'}
+      - {label: 'Photo', name: 'photo', widget: 'image', required: false}
+
+  # --------------------------------------------------------------------------
+  #  LITTERS — upcoming / planned
+  # --------------------------------------------------------------------------
+  - name: 'litters'
+    label: 'Litters (upcoming & past)'
+    label_singular: 'Litter'
+    folder: 'content/litters'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{title}} — {{status}} ({{breed}})'
+    sortable_fields: ['order', 'status', 'breed']
+    view_groups:
+      - label: By status
+        field: status
+    fields:
+      - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0, hint: 'Lower numbers appear first within each section.'}
+      - {label: 'ID (URL slug)', name: 'id', widget: 'string', required: false, pattern: ['^[a-z0-9-]*$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used internally. Auto-generated from filename if left blank."}
+      - {label: 'Status', name: 'status', widget: 'select', options: ['Upcoming', 'Past'], default: 'Upcoming', hint: 'Upcoming ones show at the top of the litters page; past ones below.'}
+      - {label: 'Title', name: 'title', widget: 'string', hint: "e.g. \"Bella's Litter\"."}
+      - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
+      - label: 'Dam (mother)'
+        name: 'dam'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        required: false
+        hint: 'Pick the queen this litter is from. Creates a clickable link from the litter to her profile.'
+      - label: 'Sire (father) — our own cat'
+        name: 'sire'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        required: false
+        hint: "If the sire is one of our own studs (e.g. Ralphy), pick him here. Leave blank if it's an external stud."
+      - {label: 'Sire name (if external)', name: 'sireName', widget: 'string', required: false, hint: "Only fill in if the sire is an external stud (i.e. not one of ours). Leave blank if you picked a sire above."}
+      - {label: 'Date label', name: 'dateLabel', widget: 'string', required: false, hint: "Free text. e.g. 'Born 4th November' for past, or 'Expected Early June 2026' for upcoming."}
+      - {label: 'Kitten count', name: 'kittenCount', widget: 'string', required: false, hint: "e.g. '6 kittens — 3 of each' or '4–6 expected'."}
+      - {label: 'Short summary', name: 'summary', widget: 'string', required: false, hint: "One-line summary shown under the title."}
+      - {label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false, hint: "A square-ish photo for the card. Ideally at least 400x400 pixels."}
+      - label: 'Full description'
+        name: 'body'
+        widget: 'markdown'
+        hint: 'The story of this litter. Can be several paragraphs — use ## for section headings.'
+
+  # --------------------------------------------------------------------------
+  #  TESTIMONIALS
+  # --------------------------------------------------------------------------
+  - name: 'testimonials'
+    label: 'Testimonials'
+    label_singular: 'Testimonial'
+    folder: 'content/testimonials'
+    create: true
+    delete: true
+    slug: 'testimonial-{{year}}-{{month}}-{{slug}}'
+    summary: '{{name}} ({{breed}})'
+    sortable_fields: ['order', 'name']
+    fields:
+      - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0}
+      - {label: 'Name', name: 'name', widget: 'string', hint: "First name and last initial, or family name e.g. 'The Phair Family'."}
+      - {label: 'Role / relationship', name: 'role', widget: 'string', required: false, hint: "e.g. 'Miso's family', 'Royal Ragdolls'. Optional — shown below the name."}
+      - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
+      - {label: 'Rating (1–5)', name: 'rating', widget: 'number', value_type: 'int', min: 1, max: 5, default: 5}
+      - label: 'Related cat (optional)'
+        name: 'relatedCat'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        required: false
+        hint: "If this testimonial is specifically about one of our cats, pick them here. The testimonial will appear on that cat's profile page too."
+      - {label: 'Comment', name: 'body', widget: 'text', hint: 'What the owner said. A few sentences looks best on the site.'}
+
+  # --------------------------------------------------------------------------
+  #  SITE SETTINGS — business info and form URLs
+  #  A "files" collection has fixed files rather than editor-created ones.
+  # --------------------------------------------------------------------------
+  - name: 'settings'
+    label: 'Site settings'
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: 'business'
+        label: 'Business info'
+        file: 'content/settings/business.md'
+        fields:
+          - {label: 'Business name', name: 'name', widget: 'string'}
+          - {label: 'Tagline', name: 'tagline', widget: 'text'}
+          - {label: 'Website URL', name: 'url', widget: 'string', hint: 'Full URL including https:// and trailing slash.'}
+          - {label: 'Country', name: 'country', widget: 'string', default: 'United Kingdom'}
+          - {label: 'Contact email', name: 'email', widget: 'string', required: false, hint: "Used as the fallback email shown if the form fails. Form submissions will be sent to whichever address you set in the Worker config."}
+          - {label: 'Instagram URL', name: 'instagram', widget: 'string', required: false}
+          - {label: 'Instagram handle', name: 'instagramHandle', widget: 'string', required: false}
+          - {label: 'TikTok URL', name: 'tiktok', widget: 'string', required: false}
+          - {label: 'TikTok handle', name: 'tiktokHandle', widget: 'string', required: false}
+          - {label: 'Form endpoint URL', name: 'formEndpoint', widget: 'string', required: false, hint: "The Cloudflare Worker URL that receives form submissions. e.g. https://lp-form-handler.your-subdomain.workers.dev. Set this once you've deployed the Worker."}
+          - {label: 'Turnstile site key', name: 'turnstileSiteKey', widget: 'string', required: false, hint: "Public site key from Cloudflare Turnstile dashboard. Used for spam protection on forms. Leave blank to disable."}
+
+      - name: 'forms'
+        label: 'Form embed URLs'
+        file: 'content/settings/forms.md'
+        fields:
+          - {label: 'Kitten enquiry form URL', name: 'kittenEnquiry', widget: 'string', required: false, hint: "Paste your Tally or Typeform embed URL here. Leave blank to show a placeholder."}
+          - {label: 'Waitlist form URL', name: 'waitlist', widget: 'string', required: false}
+          - {label: 'Stud booking form URL', name: 'studBooking', widget: 'string', required: false}
+          - {label: 'Contact form URL', name: 'contact', widget: 'string', required: false}
+
+      - name: 'about'
+        label: 'About page — breeders bio'
+        file: 'content/settings/about.md'
+        fields:
+          - {label: 'Heading', name: 'breedersHeading', widget: 'string', default: 'Julia & Mark', hint: 'The heading shown above the bio. e.g. "Julia & Mark".'}
+          - {label: 'Photo alt text', name: 'photoAlt', widget: 'string', required: false, hint: 'Describes the breeders photo for screen readers and SEO.'}
+          - label: 'Bio (a few paragraphs)'
+            name: 'body'
+            widget: 'markdown'
+            hint: 'The full "Meet the Breeders" story in your own voice. Use paragraphs to break it up.'

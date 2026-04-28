@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Available Kittens | Ragdoll, Maine Coon &amp; British Shorthair | Little Paws By Miles</title>
+  <meta name="description" content="See the kittens currently available at Little Paws By Miles. GCCF and TICA registered Ragdoll, Maine Coon and British Shorthair kittens, fully vaccinated, microchipped and ready for their forever homes at 13 weeks.">
+  <meta name="keywords" content="Ragdoll kittens for sale UK, Maine Coon kittens UK, British Shorthair kittens, GCCF registered kittens, TICA registered kittens, available kittens UK, pedigree kittens for sale">
+  <meta name="author" content="Little Paws By Miles">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://littlepawsbymiles.co.uk/available-kittens.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Little Paws By Miles">
+  <meta property="og:title" content="Available Kittens | Ragdoll, Maine Coon &amp; British Shorthair | Little Paws By Miles">
+  <meta property="og:description" content="See the kittens currently available at Little Paws By Miles. GCCF and TICA registered Ragdoll, Maine Coon and British Shorthair kittens, fully vaccinated, microchipped and ready for their forever homes at 13 weeks.">
+  <meta property="og:url" content="https://littlepawsbymiles.co.uk/available-kittens.html">
+  <meta property="og:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
+  <meta property="og:locale" content="en_GB">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Available Kittens | Ragdoll, Maine Coon &amp; British Shorthair | Little Paws By Miles">
+  <meta name="twitter:description" content="See the kittens currently available at Little Paws By Miles. GCCF and TICA registered Ragdoll, Maine Coon and British Shorthair kittens, fully vaccinated, microchipped and ready for their forever homes at 13 weeks.">
+  <meta name="twitter:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="apple-touch-icon" href="images/logo.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="kittens">
+  <div id="site-header-placeholder"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Looking for a new friend?</span>
+        <h1>Available Kittens</h1>
+        <p>All of our registered kittens leave home at 13 weeks. Fully vaccinated, microchipped, wormed, and vet-checked. Non-registered kittens follow the same standard of care, with timing confirmed individually. Either way, every kitten goes home well-loved and well-prepared.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div id="kittens-root"></div>
+      </div>
+    </section>
+
+    <!-- Past kittens gallery — what previous Little Paws kittens have looked like -->
+    <section class="section-tinted">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Recent Little Paws Kittens</span>
+          <h2>A taste of what's been</h2>
+          <p>While you wait, here are a few of the kittens we've raised recently.</p>
+        </div>
+        <div class="past-kittens-gallery">
+          <div class="past-kitten-photo">
+            <img src="images/kittens-cuddled.jpg" alt="Two Little Paws kittens cuddled together in a soft bed" loading="lazy">
+          </div>
+          <div class="past-kitten-photo">
+            <img src="images/kittens-tower.jpg" alt="Two Maine Coon kittens sat on a cat tower" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Waitlist -->
+    <section id="waitlist" style="padding-top: 0;">
+      <div class="container container-narrow">
+        <div class="form-container">
+          <span class="eyebrow">Stay in the loop</span>
+          <h2>Join the waitlist</h2>
+          <p>We'll let you know as soon as new kittens become available. No pressure, no spam.</p>
+          <div id="enquiry-form-root" data-form-type="kitten"></div>
+          <p class="form-note">Prefer to share a few details first? Fill in the form and we'll be in touch.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-placeholder"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/partials.js"></script>
+  <script src="js/enquiry-form.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderKittens('kittens-root');
+      renderEnquiryForm('enquiry-form-root');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!--
+  Reusable Smart Enquiry Form
+  ============================
+  Drop this onto any page where you want a contact form. The form's behaviour
+  changes based on the data-form-type attribute on the wrapper:
+
+    <div id="enquiry-form-root" data-form-type="kitten"></div>     ← Kitten enquiry
+    <div id="enquiry-form-root" data-form-type="stud"></div>       ← Stud booking
+    <div id="enquiry-form-root" data-form-type="waitlist"></div>   ← Waitlist signup
+    <div id="enquiry-form-root" data-form-type="general"></div>    ← Generic contact
+
+  Then call:  renderEnquiryForm('enquiry-form-root');
+
+  The form is server-rendered into the placeholder by main.js when the page
+  loads. This means: one source of truth (this template), four different
+  behaviours, zero duplication.
+-->
+<form class="enquiry-form" data-form-type="GENERIC" novalidate>
+  <!-- Hidden form-type marker so the Worker knows which kind of enquiry this is -->
+  <input type="hidden" name="formType" value="GENERIC">
+  <input type="hidden" name="pageUrl" value="">
+  <input type="hidden" name="pageTitle" value="">
+
+  <!-- Honeypot field — humans can't see it (CSS hides it). Bots fill it in
+       because they auto-fill anything labelled. The Worker discards any
+       submission where this field is non-empty. -->
+  <div class="honeypot-field" aria-hidden="true">
+    <label for="ef-website">Website (leave this blank)</label>
+    <input type="text" id="ef-website" name="website" tabindex="-1" autocomplete="off">
+  </div>
+
+  <!-- Required fields shown for all form types -->
+  <div class="form-row form-row-half">
+    <div class="form-field">
+      <label for="ef-name">Your name <span class="required">*</span></label>
+      <input type="text" id="ef-name" name="name" required autocomplete="name" minlength="2" maxlength="100">
+    </div>
+    <div class="form-field">
+      <label for="ef-email">Email address <span class="required">*</span></label>
+      <input type="email" id="ef-email" name="email" required autocomplete="email" maxlength="200">
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label for="ef-phone">Phone (optional)</label>
+    <input type="tel" id="ef-phone" name="phone" autocomplete="tel" maxlength="30">
+  </div>
+
+  <!-- Conditional fields injected by JS based on form type:
+       Kitten enquiry → breed preference, timeframe
+       Stud booking   → queen breed, queen registration, queen health tests
+       Waitlist       → breed preference
+       General        → (no extras)
+  -->
+  <div class="form-conditional-fields"></div>
+
+  <div class="form-field">
+    <label for="ef-message">
+      <span class="msg-label-text">Your message</span>
+      <span class="required">*</span>
+    </label>
+    <textarea id="ef-message" name="message" required rows="5" minlength="10" maxlength="2000"></textarea>
+    <small class="form-hint msg-hint">Tell us a little about yourself and what you're looking for. We'll always reply personally.</small>
+  </div>
+
+  <!-- Cloudflare Turnstile widget — invisible captcha that runs automatically.
+       The data-sitekey is set by JS at runtime from the BUSINESS config. -->
+  <div class="cf-turnstile" data-sitekey="" data-theme="light" data-size="flexible"></div>
+
+  <button type="submit" class="btn btn-primary">
+    <span class="btn-label">Send enquiry</span>
+    <span class="btn-spinner" aria-hidden="true"></span>
+  </button>
+
+  <!-- Status message rendered by JS after submission -->
+  <div class="form-status" role="status" aria-live="polite"></div>
+</form>
