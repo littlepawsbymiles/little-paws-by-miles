@@ -9,7 +9,13 @@ registration: TICA Registered
 tagline: A dramatic smoke tortie coat and a calm, confident nature.
 siblings:
   - tilly
-photos: []
+photos:
+  - images/cats/billie/billie-1.jpg
+  - images/cats/billie/billie-2.jpg
+  - images/cats/billie/billie-3.jpg
+  - images/cats/billie/billie-4.jpg
+  - images/cats/billie/billie-5.jpg
+  - images/cats/billie/billie-6.jpg
 ---
 
 Billie is Tilly's sister, and while they share bloodlines (with championships behind them), the two girls are quite different in temperament.

@@ -23,7 +23,12 @@ const CATS = [
     "tagline": "Our blue point girl, and probably the softest soul in the house.",
     "personality": "Bella is our blue point girl, and probably the softest soul in the house. Her pedigree is something we're genuinely proud of. She comes from a line full of Champions and Grand Champions, and she carries chocolate and dilute, which makes her particularly interesting from a breeding point of view.\n\nAll of that matters. But what matters more, day-to-day, is that Bella is the cat who quietly appears next to you the moment you sit down. Classic Ragdoll, really. She doesn't demand attention, she just wants to be near.\n\nShe had her first litter recently. Six kittens, and she was a natural from the start. Patient, attentive, completely devoted to them. Fully health tested, and as gentle a mum as you could hope for.",
     "siblings": [],
-    "photos": []
+    "photos": [
+      "images/cats/bella/bella-1.jpg",
+      "images/cats/bella/bella-2.jpg",
+      "images/cats/bella/bella-3.jpg",
+      "images/cats/bella/bella-with-kittens.jpg"
+    ]
   },
   {
     "id": "cookie",
@@ -40,7 +45,13 @@ const CATS = [
     "siblings": [
       "dottie"
     ],
-    "photos": []
+    "photos": [
+      "images/cats/cookie/cookie-1.jpg",
+      "images/cats/cookie/cookie-2.jpg",
+      "images/cats/cookie/cookie-3.jpg",
+      "images/cats/cookie/cookie-4.jpg",
+      "images/cats/cookie/cookie-5.jpg"
+    ]
   },
   {
     "id": "dottie",
@@ -104,7 +115,14 @@ const CATS = [
     "siblings": [
       "tilly"
     ],
-    "photos": []
+    "photos": [
+      "images/cats/billie/billie-1.jpg",
+      "images/cats/billie/billie-2.jpg",
+      "images/cats/billie/billie-3.jpg",
+      "images/cats/billie/billie-4.jpg",
+      "images/cats/billie/billie-5.jpg",
+      "images/cats/billie/billie-6.jpg"
+    ]
   },
   {
     "id": "tilly",
@@ -151,7 +169,13 @@ const CATS = [
     "tagline": "The quiet one. A plush coat, a round face, and a knack for finding sunshine.",
     "personality": "Annie is the quiet one. A plush lilac coat, a round face, and a way of finding the sunniest spot in the house within minutes of the light changing.\n\nShe isn't registered, but she's fully health checked and cared for to the same standard as the rest of our girls. Her whole personality is low-key contentment. She likes gentle fuss, calm company, and being warm. That's about it. Honestly, it's lovely.",
     "siblings": [],
-    "photos": []
+    "photos": [
+      "images/cats/annie/annie-1.jpg",
+      "images/cats/annie/annie-2.jpg",
+      "images/cats/annie/annie-3.jpg",
+      "images/cats/annie/annie-4.jpg",
+      "images/cats/annie/annie-5.jpg"
+    ]
   }
 ];
 
@@ -169,7 +193,7 @@ const LITTERS = [
     "dateLabel": "Born 4th November",
     "kittenCount": "6 kittens, 4 boys and 2 girls",
     "summary": "Bella's first litter. Six seal point kittens, all to wonderful new homes.",
-    "thumbnail": "",
+    "thumbnail": "images/cats/bella/bella-with-kittens.jpg",
     "body": "Six kittens. Four boys and two girls, all seal points, and Bella's first.\n\nWe'd had our fingers crossed for Bella from the moment we paired her with Ralphy. She's such a gentle girl that we weren't entirely sure how she'd take to motherhood, but we needn't have worried. She was a natural from the first night. Patient, attentive, and absolutely devoted to them.\n\nThe kittens arrived on the 4th of November and spent their first few weeks tucked away with Bella in the kitten suite. Once they were steady on their feet they came downstairs in shifts, met the rest of the household, and settled into family life beautifully.\n\nWhile they were with us we called them Jelly Bean, Starburst, Tango, Liquorice, Skittles and Bubblegum. Silly sweet-shop names, admittedly, but it made counting them at feeding time a lot easier.\n\nWe're so proud of this little group, and even prouder of Bella.\n\n## About this pairing\n\nThis is a particularly interesting pairing because both Bella and Ralphy carry the chocolate and dilute genes. That combination is genuinely uncommon in Ragdoll lines, and it opens the door to some of the rarer colours in future litters from this pair.\n\nRalphy passes on the classic Seal Point colouring and the famous Ragdoll temperament. Bella brings her gentle nature and her pedigree, a line full of Champions and Grand Champions. Together they produced exactly the kind of kittens we hoped for. Healthy, friendly, and very sure about people.\n\n## Thinking about a future Bella and Ralphy litter?\n\nWe'd love to hear from you. Get in touch and we'll let you know when we're planning the next one."
   },
   {

@@ -10,7 +10,7 @@ sireName: Ralphy
 dateLabel: "Born 4th November"
 kittenCount: "6 kittens, 4 boys and 2 girls"
 summary: "Bella's first litter. Six seal point kittens, all to wonderful new homes."
-thumbnail: ""
+thumbnail: "images/cats/bella/bella-with-kittens.jpg"
 ---
 
 Six kittens. Four boys and two girls, all seal points, and Bella's first.

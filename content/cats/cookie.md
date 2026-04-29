@@ -9,7 +9,12 @@ registration: ""
 tagline: Striking blue eyes, a silky coat and every bit the Ragdoll in temperament.
 siblings:
   - dottie
-photos: []
+photos:
+  - images/cats/cookie/cookie-1.jpg
+  - images/cats/cookie/cookie-2.jpg
+  - images/cats/cookie/cookie-3.jpg
+  - images/cats/cookie/cookie-4.jpg
+  - images/cats/cookie/cookie-5.jpg
 ---
 
 Cookie isn't registered, and we want to be upfront about that. What she is, though, is fully health tested, thoroughly loved, and every bit the Ragdoll in temperament and type. Striking blue eyes, a silky coat, and that quiet, people-focused nature the breed is known for.
