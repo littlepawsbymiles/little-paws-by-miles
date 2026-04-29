@@ -13,8 +13,7 @@
 # "github" backend = editors authenticate with a GitHub account and commits go
 # into your repo. We'll fill in REPO_OWNER/REPO_NAME once the repo is created.
 backend:
-  name: github
-  repo: REPO_OWNER/REPO_NAME              # ← replace after creating the GitHub repo
+  name: git-gateway
   branch: main
   # Optional: open_authoring lets editors submit changes via pull request
   # without direct repo access. Keep off for now (all editors are trusted).
