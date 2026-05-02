@@ -10,7 +10,11 @@ registration: GCCF & TICA Dual Registered · GCCF Stud Register
 studRegisterUrl: https://online.gccfcats.org/Online/CatManager/StudMap
 tagline: A striking young Maine Coon stud with real presence.
 siblings: []
-photos: []
+photos:
+  - images/cats/starsky/starsky-001.jpg
+  - images/cats/starsky/starsky-002.jpg
+  - images/cats/starsky/starsky-003.jpg
+  - images/cats/starsky/starsky-004.jpg
 ---
 
 Starsky is a young male of real Maine Coon type. Large, substantial, and built the way the breed ought to be. Broad chest, strong bone, square muzzle, high-set ears with proper lynx tips, and deep emerald eyes that give him a wild-but-gentle look.
