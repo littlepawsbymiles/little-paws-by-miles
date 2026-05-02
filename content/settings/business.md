@@ -8,6 +8,6 @@ instagram: "https://www.instagram.com/little_paws_by_miles/"
 instagramHandle: "@little_paws_by_miles"
 tiktok: "https://www.tiktok.com/@little.paws.by.miles"
 tiktokHandle: "@Little.paws.by.miles"
-formEndpoint: ""
-turnstileSiteKey: ""
+formEndpoint: "https://lp-form-handler.littlepawsbymiles.workers.dev"
+turnstileSiteKey: "0x4AAAAAADFCY0hnROOVrV0F"
 ---
