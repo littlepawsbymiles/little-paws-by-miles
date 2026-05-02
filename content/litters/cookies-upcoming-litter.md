@@ -1,28 +1,34 @@
 ---
-order: 1
-id: cookies-upcoming-litter
-status: Upcoming
+order: 0
+id: cookies-litter-may
+status: Past
 title: "Cookie's Litter"
 breed: Ragdoll
 dam: cookie
 sire: ralphy
 sireName: Ralphy
-dateLabel: "Expected soon, date to be confirmed"
-kittenCount: ""
-summary: "A new litter on the way from Cookie, paired with our seal point stud Ralphy."
+dateLabel: "Born 1st May 2026"
+kittenCount: "5 kittens"
+summary: "Cookie's first litter has arrived: five healthy kittens born 1st May, sired by our seal point stud Ralphy."
 thumbnail: ""
 ---
 
-A new litter is on its way from Cookie, paired with Ralphy.
+Cookie's kittens have arrived.
 
-Cookie is our lilac lynx girl, with those striking blue eyes and the softest, sweetest nature. She isn't registered, and we've always been open about that, but she is fully health checked and raised to exactly the same standard as our registered queens.
+Five healthy little ones, born on the 1st of May, all to Cookie and Ralphy.
 
-Ralphy is our own GCCF and TICA registered seal point Ragdoll stud, listed on the official GCCF Stud Register. Because Ralphy is registered, the registered status of Cookie's kittens depends on each individual case. We're happy to chat through the detail when you get in touch.
+She did wonderfully. First-time mothers can sometimes need a steadying hand, but Cookie was calm from the start and took to it beautifully. Tucked away in the kitten suite with her babies, she's barely left the nest, and we couldn't be prouder of her.
 
-We don't announce colours, numbers or availability ahead of time. We prefer to wait until the kittens are here, have had their first vet check, and we can give you accurate information rather than a hopeful guess. Everything becomes clearer a few weeks in.
+It's far too early to say much about colours, weights or markings. The first week is about Cookie and her kittens — getting them warm, fed, and settled. We'll know more in a fortnight or so once their points start to come through.
 
-When the time comes for them to leave us, they'll go home at thirteen weeks old. Vet-checked, vaccinated, microchipped, properly socialised, and sent off with a full kitten information pack.
+## About this pairing
+
+Cookie is our lilac lynx girl, the soft and sweet one of the household. She isn't registered, but she's been raised to exactly the same standard as our registered queens, with full health checks throughout.
+
+Ralphy is our own GCCF and TICA registered seal point Ragdoll stud, listed on the official GCCF Stud Register. Because Ralphy is registered, the registered status of these kittens depends on each individual case — happy to chat through the detail when you get in touch.
 
 ## Interested?
 
-Drop us a message and we'll add you to our waitlist for this litter. We'll have a chat first, tell you a bit more about Cookie, and find out what you're hoping for in a kitten. Nothing is decided quickly, and nothing is pressured.
+The waitlist is open for these kittens. Drop us a message and we'll have a chat about what you're hoping for. Nothing is decided quickly, and the right home for each kitten matters as much as the right kitten for each home.
+
+Kittens will leave us at thirteen weeks old. Vet-checked, vaccinated, microchipped, properly socialised, and sent home with a full kitten information pack.
