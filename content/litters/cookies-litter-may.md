@@ -10,7 +10,7 @@ sireName: Ralphy
 dateLabel: "Born 1st May 2026"
 kittenCount: "5 kittens"
 summary: "Cookie's first litter has arrived: five healthy kittens born 1st May, sired by our seal point stud Ralphy."
-thumbnail: ""
+thumbnail: images/cats/cookie/cookie-litter-thumbnail.jpg
 ---
 
 Cookie's kittens have arrived.
