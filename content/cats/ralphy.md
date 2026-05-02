@@ -11,7 +11,11 @@ dob: 2 April 2023
 studRegisterUrl: https://online.gccfcats.org/Online/CatManager/StudMap
 tagline: Seal point Ragdoll stud, proven and GCCF Stud Register listed.
 siblings: []
-photos: []
+photos:
+  - images/cats/ralphy/ralphy-001
+  - images/cats/ralphy/ralphy-002
+  - images/cats/ralphy/ralphy-003
+  - images/cats/ralphy/ralphy-004
 ---
 
 Ralphy is our Seal Point Ragdoll boy. Large, chunky, with rich seal-brown points on a soft creamy coat, deep sapphire eyes, a plush full ruff, breeches, and a proper plume of a tail. He looks every bit the Ragdoll and has the teddy-bear personality to match.
