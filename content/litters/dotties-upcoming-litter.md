@@ -10,7 +10,7 @@ sireName: Ralphy
 dateLabel: "Expected soon, date to be confirmed"
 kittenCount: ""
 summary: "A new litter coming from Dottie, paired with our seal point stud Ralphy."
-thumbnail: ""
+thumbnail: images/cats/cookie/dotte-002.jpg
 ---
 
 Dottie is expecting her next litter, paired with Ralphy. We couldn't be more excited for her.
