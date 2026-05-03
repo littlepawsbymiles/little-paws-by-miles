@@ -1,10 +1,11 @@
 ---
 order: 1
 name: Sarah
-role: "Durham · Ragdoll & Maine Coon Stud Owner"
+role: "Felinity House · Ragdoll & Maine Coon Breeder"
 breed: Ragdoll
 rating: 5
-relatedCat: ralphy
+relatedCat: starsky
+testimonialTitle: “Outstanding stud cats with exceptional results and support”
 ---
 
 I had an absolutely fantastic experience with the stud service at Little Paws by Miles, and couldn't be happier with the results. From start to finish, Julia handled everything with professionalism, care, and a genuine passion for her cats.
