@@ -5,7 +5,7 @@ role: "Keighley · Ragdoll Breeder"
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
-testimonialTitle: “Trusted care with regular updates and total peace of mind”
+testimonialTitle: Trusted care with regular updates and total peace of mind
 ---
 
 I used Little Paws by Miles delivery service for my Ragdoll Missy. Julia and Mark arrived promptly to collect her, and I immediately felt reassured by how friendly and approachable they were. We had a lovely chat about Ragdolls, which put me at ease straight away.
