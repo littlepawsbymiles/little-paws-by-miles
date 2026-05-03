@@ -1105,6 +1105,26 @@ section {
   position: relative;
 }
 
+.testimonial-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #8b5e3c;
+  margin: 0.5rem 0 0.75rem;
+  line-height: 1.4;
+}
+
+.testimonial-title::before {
+  content: "“";
+  font-size: 1.4rem;
+  margin-right: 0.25rem;
+}
+
+.testimonial-title::after {
+  content: "”";
+  font-size: 1.4rem;
+  margin-left: 0.25rem;
+}
+
 .testimonial-card::before {
   content: '"';
   font-family: var(--font-display);
