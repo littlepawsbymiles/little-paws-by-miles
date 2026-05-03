@@ -5,7 +5,7 @@ role: Miso's family
 breed: Ragdoll
 rating: 5
 relatedCat: bella
-title: "Beautifully raised kittens with confident, loving temperaments"
+testimonialTitle: "Beautifully raised kittens with confident, loving temperaments"
 ---
 
 Julia is a wonderful breeder and made our experience of bringing home Miso super special. She was warm and welcoming, letting us into her home to meet her cats and explained her journey as a breeder. She gave us time to sit with the kittens alone, and meet their beautiful mum, Bella. She also took the time to tell us everything we needed to know about Ragdolls as first-time owners.
