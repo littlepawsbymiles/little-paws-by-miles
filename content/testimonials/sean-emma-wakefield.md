@@ -1,7 +1,7 @@
 ---
 order: 2
 name: Sean & Emma
-role: "Wakefield · Maine Coon Stud Owners"
+role: Wakefield · Maine Coon Stud Owners
 breed: Maine Coon
 rating: 5
 relatedCat: starsky
