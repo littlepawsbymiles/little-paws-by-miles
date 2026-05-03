@@ -1,7 +1,7 @@
 ---
 order: 1
 name: Sarah
-role: "Felinity House · Ragdoll & Maine Coon Breeder"
+role: Felinity House · Ragdoll & Maine Coon Breeder
 breed: Ragdoll
 rating: 5
 relatedCat: starsky
