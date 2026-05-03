@@ -1,6 +1,6 @@
 ---
 breedersHeading: Julia & Mark
-photo: images/julia-and-mark.jpg
+photo: images/julia-and-mark.webp
 photoAlt: Julia and Mark, the breeders behind Little Paws By Miles
 ---
 
