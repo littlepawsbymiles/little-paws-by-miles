@@ -81,7 +81,7 @@
     waitlist: {
       heading: "Join our waitlist",
       submitLabel: "Join the waitlist",
-      messagePrompt: "Tell us a bit about yourself and what you're hoping for. We'll be in touch when something matches.",
+      messagePrompt: "Tell us a bit about yourself and what you're hoping for. We'll be in touch when something matches. All enquiries are welcome, we’re always happy to chat and help you find the right kitten.",
       conditionalFields: `
         <div class="form-field">
           <label for="ef-breed">Which breed are you most interested in?</label>
