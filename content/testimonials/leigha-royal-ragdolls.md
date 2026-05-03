@@ -1,10 +1,11 @@
 ---
 order: 6
 name: Leigha
-role: Royal Ragdolls
+role: Royal Ragdolls · Ragdoll Breeder
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
+testimonialTitle: “An exceptional stud in a home of the highest standard”
 ---
 
 Ralphy was originally part of my programme at Royal Ragdolls, where he was used successfully as a stud, producing large litters of kittens of excellent quality, type and temperament. When I made the decision to rehome him, I chose Julia and Mark at Little Paws by Miles as I could not think of a more suitable home of this standard, as I was certain he would be exceptionally well cared for.
