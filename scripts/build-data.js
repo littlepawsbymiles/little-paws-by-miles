@@ -137,6 +137,7 @@ const testimonials = readCollection(path.join(CONTENT, 'testimonials')).map(t =>
   breed: t.breed || '',
   rating: typeof t.rating === 'number' ? t.rating : 5,
   relatedCat: t.relatedCat || '',
+  testimonialTitle: t.testimonialTitle || '',
   comment: t._body || ''
 }));
 
