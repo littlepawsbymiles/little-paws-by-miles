@@ -1,7 +1,7 @@
 ---
 order: 3
 name: Jodie
-role: "Canine & Feline Pregnancy Scanner"
+role: Canine & Feline Pregnancy Scanner
 breed: Ragdoll
 rating: 5
 relatedCat: ""
