@@ -29,6 +29,6 @@ This is a particularly interesting pairing because both Bella and Ralphy carry t
 
 Ralphy passes on the classic Seal Point colouring and the famous Ragdoll temperament. Bella brings her gentle nature and her pedigree, a line full of Champions and Grand Champions. Together they produced exactly the kind of kittens we hoped for. Healthy, friendly, and very sure about people.
 
-## Thinking about a future Bella and Ralphy litter?
+## Thinking about a future Bella litter?
 
 We'd love to hear from you. Get in touch and we'll let you know when we're planning the next one.
