@@ -9,7 +9,7 @@ colour: Seal Point
 registration: GCCF & TICA Dual Registered · GCCF Stud Register
 dob: 2 April 2023
 studRegisterUrl: https://online.gccfcats.org/Online/CatManager/StudMap
-tagline: Seal point Ragdoll stud, proven and GCCF Stud Register listed.
+tagline: Premium GCCF & TICA (dual registered) Seal Point Ragdoll Stud. Officially Listed on the GCCF Stud Register.
 siblings: []
 photos:
   - images/cats/ralphy/ralphy-001.jpg
