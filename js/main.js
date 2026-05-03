@@ -112,7 +112,7 @@ function renderCatGrid(targetId) {
   const groups = [
     { heading: 'Ragdolls',         filter: c => c.breed === 'Ragdoll' },
     { heading: 'Maine Coons',      filter: c => c.breed === 'Maine Coon' },
-    { heading: 'British Shorthairs', filter: c => c.breed === 'British Shorthair' }
+    { heading: 'British Shorthair', filter: c => c.breed === 'British Shorthair' }
   ];
 
   target.innerHTML = groups.map(group => {
