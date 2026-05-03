@@ -5,11 +5,11 @@ status: Upcoming
 title: "Cookie's Litter"
 breed: Ragdoll
 dam: cookie
-sire: ralphy
-sireName: Ralphy
+sire: ""
+sireName: ""
 dateLabel: "Born 1st May 2026"
 kittenCount: "5 kittens"
-summary: "Cookie's first litter has arrived: five healthy kittens born 1st May, sired by our seal point stud Ralphy."
+summary: "Cookie's first litter has arrived: five healthy kittens born 1st May."
 thumbnail: images/cats/cookie/cookie-litter-thumbnail.jpg
 ---
 
@@ -24,8 +24,6 @@ It's far too early to say much about colours, weights or markings. The first wee
 ## About this pairing
 
 Cookie is our lilac lynx girl, the soft and sweet one of the household. She isn't registered, but she's been raised to exactly the same standard as our registered queens, with full health checks throughout.
-
-Ralphy is our own GCCF and TICA registered seal point Ragdoll stud, listed on the official GCCF Stud Register. Because Ralphy is registered, the registered status of these kittens depends on each individual case — happy to chat through the detail when you get in touch.
 
 ## Interested?
 
