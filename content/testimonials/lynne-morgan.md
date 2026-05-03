@@ -5,7 +5,7 @@ role: The Wirral · Veterinary Nurse, Cat Show Exhibitor & Ragdoll Breeder
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
-testimonialTitle: “A fantastic experience with genuine care and attention throughout”
+testimonialTitle: A fantastic experience with genuine care and attention throughout
 ---
 
 I couldn’t be happier with the care and professionalism Julia provided. My Ragdoll, Mabel, stayed with her to be covered by her absolutely gorgeous Ragdoll, Ralphy and the entire experience was fantastic from start to finish.
