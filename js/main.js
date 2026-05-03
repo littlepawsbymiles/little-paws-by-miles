@@ -57,13 +57,21 @@ function renderAboutBio(headingTargetId, bodyTargetId) {
   if (typeof ABOUT === 'undefined') return;
   const headingEl = headingTargetId && document.getElementById(headingTargetId);
   const bodyEl = bodyTargetId && document.getElementById(bodyTargetId);
+  const photoEl = document.getElementById('about-photo');
 
   if (headingEl && ABOUT.breedersHeading) {
     headingEl.textContent = ABOUT.breedersHeading;
   }
 
+  if (photoEl && ABOUT.photo) {
+    photoEl.innerHTML = `
+      <div class="about-photo">
+        <img src="${escapeHtml(ABOUT.photo)}" alt="${escapeHtml(ABOUT.photoAlt || 'Julia and Mark')}" loading="lazy">
+      </div>
+    `;
+  }
+
   if (bodyEl && ABOUT.bio) {
-    // Split on double-newline into paragraphs, escape each for safety
     const paragraphs = ABOUT.bio
       .split(/\n\n+/)
       .map(p => p.trim())
