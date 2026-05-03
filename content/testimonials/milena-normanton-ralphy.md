@@ -1,7 +1,7 @@
 ---
 order: 4
 name: Milena
-role: "Normanton · Ragdoll Owner"
+role: Normanton · Ragdoll Owner
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
