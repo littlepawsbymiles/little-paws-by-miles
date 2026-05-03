@@ -5,6 +5,7 @@ role: "Sheffield · Dolly Dazzler Ragdolls · GCCF Breeders Scheme"
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
+testimonial.Title: “Welcoming, spotless, and professional from start to finish”
 ---
 
 I recently used the stud service offered by Little Paws by Miles and their beautiful male Ragdoll Ralphy. From the very first email, I was met with efficiency, professionalism and courtesy. On arrival at Julia's I had a lovely warm welcome, a chance to say hello to her spectacular cats, followed by a tour of her home. Everywhere was spotlessly clean and it was obvious that this was a genuine, cat-loving household.
