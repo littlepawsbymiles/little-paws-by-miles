@@ -8,7 +8,7 @@ role: Stud
 colour: Blue Silver Mackerel Tabby
 registration: GCCF & TICA Dual Registered · GCCF Stud Register
 studRegisterUrl: https://online.gccfcats.org/Online/CatManager/StudMap
-tagline: A striking young Maine Coon stud with real presence.
+tagline: GCCF & TICA Blue Silver Mackerel Tabby. Officially listed on the GCCF Stud Register.
 siblings: []
 photos:
   - images/cats/starsky/starsky-001.jpg
