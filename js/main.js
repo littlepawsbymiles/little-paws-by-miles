@@ -618,8 +618,9 @@ function renderTestimonialCard(t, opts) {
 
   return `
     <div class="testimonial-card fade-in">
-      <div class="testimonial-stars" aria-label="${t.rating} out of 5 stars">${renderStars(t.rating)}</div>
-      <p class="testimonial-text">${escapeHtml(t.comment)}</p>
+    <div class="testimonial-stars" aria-label="${t.rating} out of 5 stars">${renderStars(t.rating)}</div>
+    ${t.testimonialTitle ? `<h3 class="testimonial-title">${escapeHtml(t.testimonialTitle)}</h3>` : ''}
+    <p class="testimonial-text">${escapeHtml(t.comment)}</p>
       <div class="testimonial-author">
         <strong>${escapeHtml(t.name)}</strong>
         ${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ''}
