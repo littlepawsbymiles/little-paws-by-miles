@@ -344,6 +344,7 @@ function renderRelatedTestimonialsForCat(cat) {
       </div>
     </div>
   `;
+  requestAnimationFrame(() => attachReadMoreToggles(target));
 }
 
 
@@ -438,18 +439,62 @@ function renderKittens(targetId) {
 }
 
 function renderKittenCard(kitten) {
-  const hasPhoto = kitten.photo && kitten.photo.length;
+  const photos = Array.isArray(kitten.photos) ? kitten.photos.filter(p => p && p.length) : [];
+  const coverPhoto = photos[0] || '';
+  const hasPhoto = !!coverPhoto;
   const img = hasPhoto
-    ? `<img src="${escapeHtml(kitten.photo)}" alt="${escapeHtml(kitten.name)}" loading="lazy">`
+    ? `<img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(kitten.name)}" loading="lazy">`
     : `<div class="kitten-card-image placeholder">${getCatInitial(kitten.name)}</div>`;
 
-  const badgeClass = kitten.status && kitten.status.toLowerCase() === 'reserved' ? 'reserved' : '';
-  const badge = kitten.status ? `<span class="kitten-badge ${badgeClass}">${escapeHtml(kitten.status)}</span>` : '';
+  const status = (kitten.status || 'Available').trim();
+  const statusLower = status.toLowerCase();
+  const badgeClass = statusLower === 'reserved' ? 'reserved'
+                   : statusLower === 'sold'     ? 'sold'
+                   : '';
+  const badge = `<span class="kitten-badge ${badgeClass}">${escapeHtml(status)}</span>`;
 
-  const isReserved = kitten.status && kitten.status.toLowerCase() === 'reserved';
+  const isAvailable = statusLower === 'available';
   const enquiryLink = (typeof FORMS !== 'undefined' && FORMS.kittenEnquiry)
     ? FORMS.kittenEnquiry
     : 'contact.html';
+
+  // Parents: dam (always a cat lookup) and sire (cat lookup or free text fallback)
+  const dam = (typeof CATS !== 'undefined' && kitten.dam)
+    ? CATS.find(c => c.id === kitten.dam) : null;
+  const damHtml = dam
+    ? `<a href="cat.html?id=${encodeURIComponent(dam.id)}">${escapeHtml(dam.name)}</a>`
+    : '';
+  let sireHtml = '';
+  if (kitten.sireId && typeof CATS !== 'undefined') {
+    const sire = CATS.find(c => c.id === kitten.sireId);
+    if (sire) sireHtml = `<a href="cat.html?id=${encodeURIComponent(sire.id)}">${escapeHtml(sire.name)}</a>`;
+  }
+  if (!sireHtml && kitten.sireName) sireHtml = escapeHtml(kitten.sireName);
+
+  const parentsBits = [];
+  if (damHtml)  parentsBits.push(`<span><strong>Dam:</strong> ${damHtml}</span>`);
+  if (sireHtml) parentsBits.push(`<span><strong>Sire:</strong> ${sireHtml}</span>`);
+  const parentsHtml = parentsBits.length
+    ? `<div class="kitten-parents">${parentsBits.join('')}</div>`
+    : '';
+
+  // Litter link if litterId resolves
+  let litterHtml = '';
+  if (kitten.litterId && typeof LITTERS !== 'undefined') {
+    const litter = LITTERS.find(l => l.id === kitten.litterId);
+    if (litter) {
+      litterHtml = `<a class="kitten-litter-link" href="litter.html?id=${encodeURIComponent(litter.id)}">From ${escapeHtml(litter.title)} →</a>`;
+    }
+  }
+
+  // Date / availability lines
+  const dobHtml = kitten.dob ? `<span>Born ${escapeHtml(kitten.dob)}</span>` : '';
+  const availHtml = kitten.availableFrom ? `<span>Available ${escapeHtml(kitten.availableFrom)}</span>` : '';
+
+  // CTA logic — only Available shows an enquiry button
+  const cta = isAvailable
+    ? `<a href="${escapeHtml(enquiryLink)}" class="btn btn-primary" ${enquiryLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Reserve Me</a>`
+    : `<span class="btn btn-outline">${escapeHtml(status)}</span>`;
 
   return `
     <div class="kitten-card fade-in">
@@ -457,14 +502,15 @@ function renderKittenCard(kitten) {
       <div class="kitten-card-body">
         <h3>${escapeHtml(kitten.name)}</h3>
         <div class="kitten-meta">
-          <span>${escapeHtml(kitten.breed)}</span>
-          <span>${escapeHtml(kitten.sex)}</span>
-          <span>${escapeHtml(kitten.colour)}</span>
+          ${kitten.breed ? `<span>${escapeHtml(kitten.breed)}</span>` : ''}
+          ${kitten.sex ? `<span>${escapeHtml(kitten.sex)}</span>` : ''}
+          ${kitten.colour ? `<span>${escapeHtml(kitten.colour)}</span>` : ''}
         </div>
-        <div class="kitten-price">${escapeHtml(kitten.price)}</div>
-        ${isReserved
-          ? `<span class="btn btn-outline">Reserved</span>`
-          : `<a href="${escapeHtml(enquiryLink)}" class="btn btn-primary" ${enquiryLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Reserve Me</a>`}
+        ${(dobHtml || availHtml) ? `<div class="kitten-meta">${dobHtml}${availHtml}</div>` : ''}
+        ${parentsHtml}
+        ${litterHtml}
+        ${kitten.price ? `<div class="kitten-price">${escapeHtml(kitten.price)}</div>` : ''}
+        ${cta}
       </div>
     </div>
   `;
@@ -516,9 +562,11 @@ function renderLitters(targetId, statusFilter) {
 }
 
 
-/* Build a single rich litter card. */
+/* Build a single litter card for the list view (litters.html).
+   The card teases the litter and links through to litter.html?id=... */
 function renderLitterCard(litter) {
   const hasThumbnail = litter.thumbnail && litter.thumbnail.length;
+  const detailUrl = `litter.html?id=${encodeURIComponent(litter.id)}`;
 
   // Dam — if it matches a cat id, make it a link; otherwise show as text
   const dam = (typeof CATS !== 'undefined' && litter.dam)
@@ -538,7 +586,6 @@ function renderLitterCard(litter) {
   }
   if (!sireHtml && litter.sireName) sireHtml = escapeHtml(litter.sireName);
 
-  // Parents line (combines dam and sire)
   const parentsBits = [];
   if (damHtml)  parentsBits.push(`<span><strong>Dam:</strong> ${damHtml}</span>`);
   if (sireHtml) parentsBits.push(`<span><strong>Sire:</strong> ${sireHtml}</span>`);
@@ -546,12 +593,8 @@ function renderLitterCard(litter) {
     ? `<div class="litter-parents">${parentsBits.join('')}</div>`
     : '';
 
-  // Body paragraphs (supports ## headings + basic markdown)
-  const bodyHtml = renderCatPersonality(litter.body || '');
-
   const statusClass = litter.status === 'Past' ? 'litter-past' : 'litter-upcoming';
 
-  // Thumbnail — real image if provided, or initial placeholder
   const thumbHtml = hasThumbnail
     ? `<img src="${escapeHtml(litter.thumbnail)}" alt="${escapeHtml(litter.title)}" loading="lazy">`
     : `<span class="litter-thumb-placeholder">${
@@ -562,28 +605,174 @@ function renderLitterCard(litter) {
   const waitlistLink = (typeof FORMS !== 'undefined' && FORMS.waitlist)
     ? FORMS.waitlist
     : 'contact.html';
-  const ctaHtml = litter.status === 'Upcoming'
+  const waitlistCta = litter.status === 'Upcoming'
     ? `<a href="${escapeHtml(waitlistLink)}" class="btn btn-primary btn-small" ${waitlistLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Join the waitlist</a>`
     : '';
 
+  const readMoreLabel = litter.status === 'Past' ? 'Read their story' : 'See more about this litter';
+
   return `
     <article class="litter-card ${statusClass} fade-in">
-      <div class="litter-thumb">${thumbHtml}</div>
+      <a class="litter-thumb" href="${detailUrl}" aria-label="${escapeHtml(litter.title)} — full details">${thumbHtml}</a>
       <div class="litter-body">
         <div class="litter-header">
           <span class="eyebrow">${escapeHtml(litter.status)} · ${escapeHtml(litter.breed)}</span>
-          <h3>${escapeHtml(litter.title)}</h3>
+          <h3><a class="litter-title-link" href="${detailUrl}">${escapeHtml(litter.title)}</a></h3>
           ${litter.dateLabel ? `<p class="litter-date">${escapeHtml(litter.dateLabel)}${litter.kittenCount ? ' · ' + escapeHtml(litter.kittenCount) : ''}</p>` : ''}
         </div>
         ${parentsHtml}
         ${litter.summary ? `<p class="litter-summary">${escapeHtml(litter.summary)}</p>` : ''}
-        <div class="litter-body-content" spellcheck="false">
-          ${bodyHtml}
+        <div class="litter-card-actions">
+          <a class="btn btn-outline btn-small" href="${detailUrl}">${readMoreLabel}</a>
+          ${waitlistCta}
         </div>
-        ${ctaHtml}
       </div>
     </article>
   `;
+}
+
+
+/* ---------- Render: Individual litter profile (litter.html?id=...) ---------- */
+function renderLitterProfile(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target || typeof LITTERS === 'undefined') return;
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const litter = LITTERS.find(l => l.id === id);
+
+  if (!litter) {
+    target.innerHTML = `
+      <div class="container container-narrow" style="padding: 4rem 1.5rem; text-align: center;">
+        <h1>Litter not found</h1>
+        <p>We couldn't find that litter. Head back to the litters page for a full list.</p>
+        <a href="litters.html" class="btn btn-primary mt-1">All litters</a>
+      </div>
+    `;
+    document.title = 'Litter not found — Little Paws By Miles';
+    return;
+  }
+
+  // SEO — title, description, canonical, OG
+  document.title = `${litter.title} — ${litter.breed} ${litter.status === 'Past' ? 'litter' : 'litter (upcoming)'} — Little Paws By Miles`;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    const descText = litter.summary
+      ? litter.summary
+      : `${litter.title} at Little Paws By Miles. ${litter.dateLabel || ''}`.trim();
+    metaDesc.setAttribute('content', descText);
+  }
+  const businessUrl = (typeof BUSINESS !== 'undefined' && BUSINESS.url) ? BUSINESS.url : '';
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical && businessUrl) {
+    canonical.setAttribute('href', `${businessUrl}litter.html?id=${encodeURIComponent(litter.id)}`);
+  }
+  setOgTags({
+    title: `${litter.title} — ${litter.breed}`,
+    description: litter.summary || `${litter.title} at Little Paws By Miles.`,
+    url: businessUrl ? `${businessUrl}litter.html?id=${encodeURIComponent(litter.id)}` : '',
+    image: litter.thumbnail && businessUrl ? `${businessUrl}${litter.thumbnail}` : ''
+  });
+
+  // Dam / sire as on the card
+  const dam = (typeof CATS !== 'undefined' && litter.dam)
+    ? CATS.find(c => c.id === litter.dam) : null;
+  const damHtml = dam
+    ? `<a href="cat.html?id=${encodeURIComponent(dam.id)}">${escapeHtml(dam.name)}</a>`
+    : (litter.dam ? escapeHtml(litter.dam) : '');
+  let sireHtml = '';
+  if (litter.sire && typeof CATS !== 'undefined') {
+    const sire = CATS.find(c => c.id === litter.sire);
+    if (sire) sireHtml = `<a href="cat.html?id=${encodeURIComponent(sire.id)}">${escapeHtml(sire.name)}</a>`;
+  }
+  if (!sireHtml && litter.sireName) sireHtml = escapeHtml(litter.sireName);
+  const parentsBits = [];
+  if (damHtml)  parentsBits.push(`<span><strong>Dam:</strong> ${damHtml}</span>`);
+  if (sireHtml) parentsBits.push(`<span><strong>Sire:</strong> ${sireHtml}</span>`);
+  const parentsHtml = parentsBits.length
+    ? `<div class="litter-parents">${parentsBits.join('')}</div>`
+    : '';
+
+  // Cover image — thumbnail (kept as the canonical hero) plus optional gallery
+  const cover = litter.thumbnail && litter.thumbnail.length
+    ? `<img src="${escapeHtml(litter.thumbnail)}" alt="${escapeHtml(litter.title)}" loading="lazy">`
+    : `<span class="litter-thumb-placeholder">${
+        escapeHtml(((dam && dam.name) || litter.title || 'L').charAt(0).toUpperCase())
+      }</span>`;
+
+  const galleryPhotos = (litter.photos || []).filter(p => p && p.length);
+  const galleryHtml = galleryPhotos.length
+    ? `<div class="litter-gallery">${
+        galleryPhotos.map(p => `
+          <div class="litter-gallery-item">
+            <img src="${escapeHtml(p)}" alt="${escapeHtml(litter.title)}" loading="lazy">
+          </div>
+        `).join('')
+      }</div>`
+    : '';
+
+  const bodyHtml = renderCatPersonality(litter.body || '');
+
+  const waitlistLink = (typeof FORMS !== 'undefined' && FORMS.waitlist)
+    ? FORMS.waitlist
+    : 'contact.html';
+  const waitlistCta = litter.status === 'Upcoming'
+    ? `<a href="${escapeHtml(waitlistLink)}" class="btn btn-primary" ${waitlistLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Join the waitlist</a>`
+    : '';
+
+  target.innerHTML = `
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">›</span>
+        <a href="litters.html">Litters</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">${escapeHtml(litter.title)}</span>
+      </nav>
+
+      <article class="litter-profile">
+        <header class="litter-profile-header">
+          <span class="eyebrow">${escapeHtml(litter.status)} · ${escapeHtml(litter.breed)}</span>
+          <h1>${escapeHtml(litter.title)}</h1>
+          ${litter.dateLabel ? `<p class="litter-date">${escapeHtml(litter.dateLabel)}${litter.kittenCount ? ' · ' + escapeHtml(litter.kittenCount) : ''}</p>` : ''}
+          ${parentsHtml}
+        </header>
+
+        <div class="litter-profile-cover">${cover}</div>
+
+        ${litter.summary ? `<p class="litter-summary litter-summary--lead">${escapeHtml(litter.summary)}</p>` : ''}
+
+        <div class="litter-profile-body" spellcheck="false">${bodyHtml}</div>
+
+        ${galleryHtml}
+
+        ${waitlistCta ? `<div class="litter-profile-cta">${waitlistCta}</div>` : ''}
+      </article>
+    </div>
+  `;
+
+  injectLitterStructuredData(litter, businessUrl);
+}
+
+
+function injectLitterStructuredData(litter, businessUrl) {
+  document.querySelectorAll('script[data-litter-schema]').forEach(s => s.remove());
+
+  const pageUrl = businessUrl ? `${businessUrl}litter.html?id=${encodeURIComponent(litter.id)}` : '';
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": businessUrl || undefined },
+      { "@type": "ListItem", "position": 2, "name": "Litters", "item": businessUrl ? `${businessUrl}litters.html` : undefined },
+      { "@type": "ListItem", "position": 3, "name": litter.title, "item": pageUrl || undefined }
+    ]
+  };
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.setAttribute('data-litter-schema', 'breadcrumb');
+  s.textContent = JSON.stringify(breadcrumb);
+  document.head.appendChild(s);
 }
 
 
@@ -602,6 +791,8 @@ function renderTestimonials(targetId, limit, options) {
 
   target.innerHTML = items.map(t => renderTestimonialCard(t, opts)).join('');
   observeFadeIns(target);
+  // Defer one frame so layout has settled before measuring overflow
+  requestAnimationFrame(() => attachReadMoreToggles(target));
   return items.length;  // so callers can hide the section if empty
 }
 
@@ -628,7 +819,7 @@ function renderTestimonialCard(t, opts) {
     <div class="testimonial-card fade-in">
     <div class="testimonial-stars" aria-label="${t.rating} out of 5 stars">${renderStars(t.rating)}</div>
     ${t.testimonialTitle ? `<h3 class="testimonial-title">${escapeHtml(t.testimonialTitle)}</h3>` : ''}
-    <p class="testimonial-text">${escapeHtml(t.comment)}</p>
+    <p class="testimonial-text testimonial-text--clamped">${escapeHtml(t.comment)}</p>
       <div class="testimonial-author">
         <strong>${escapeHtml(t.name)}</strong>
         ${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ''}
@@ -637,6 +828,59 @@ function renderTestimonialCard(t, opts) {
     </div>
   `;
 }
+
+
+/* For each testimonial within `root`, decide whether the text overflows
+   its clamped box. If it does, inject a Read more / Show less toggle.
+   Runs after rendering, and again on resize (the clamp threshold can
+   change with column width). */
+function attachReadMoreToggles(root) {
+  if (!root) return;
+  const cards = root.querySelectorAll('.testimonial-card');
+  cards.forEach(card => {
+    const text = card.querySelector('.testimonial-text');
+    if (!text) return;
+
+    // Reset to clamped state so we measure overflow accurately
+    text.classList.add('testimonial-text--clamped');
+    text.classList.remove('testimonial-text--expanded');
+
+    // Remove any previously-injected button so re-runs don't duplicate
+    const existing = card.querySelector('.testimonial-readmore');
+    if (existing) existing.remove();
+
+    const overflows = text.scrollHeight > text.clientHeight + 1;
+    if (!overflows) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'testimonial-readmore';
+    btn.textContent = 'Read more';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => {
+      const expanded = text.classList.toggle('testimonial-text--expanded');
+      text.classList.toggle('testimonial-text--clamped', !expanded);
+      btn.textContent = expanded ? 'Show less' : 'Read more';
+      btn.setAttribute('aria-expanded', String(expanded));
+    });
+
+    // Insert just after the text, before the author block
+    text.insertAdjacentElement('afterend', btn);
+  });
+}
+
+// Re-evaluate clamps on resize (debounced) so that column-width changes
+// add or remove the toggle as appropriate.
+(function bindResizeRecheck() {
+  let t;
+  window.addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      document.querySelectorAll('.testimonials-grid, .cat-testimonials-section .testimonials-grid')
+        .forEach(g => attachReadMoreToggles(g));
+    }, 150);
+  });
+})();
 
 
 /* ---------- Render: Form embed (Tally / Typeform / placeholder) ---------- */

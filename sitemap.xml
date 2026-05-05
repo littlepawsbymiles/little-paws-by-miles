@@ -91,8 +91,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=bobby</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://littlepawsbymiles.co.uk/cat.html?id=bobbie</loc>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -119,5 +119,25 @@
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+
+  <!-- Individual litter pages -->
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/litter.html?id=bellas-litter-november</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/litter.html?id=cookies-litter-may</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/litter.html?id=dotties-upcoming-litter</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
   </url>
 </urlset>

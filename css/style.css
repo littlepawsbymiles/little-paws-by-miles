@@ -848,6 +848,34 @@ section {
   background: var(--terracotta);
 }
 
+.kitten-badge.sold {
+  background: var(--grey);
+  opacity: 0.95;
+}
+
+.kitten-parents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--charcoal);
+  margin: 0.25rem 0;
+}
+
+.kitten-parents a {
+  color: var(--brown);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.kitten-litter-link {
+  font-size: 0.85rem;
+  color: var(--brown);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-bottom: 0.25rem;
+}
+
 .kitten-card-body {
   padding: 1.25rem;
   display: flex;
@@ -1157,6 +1185,46 @@ section {
   margin: 0;
   position: relative;
   z-index: 1;
+}
+
+/* Clamp long testimonials to a fixed line count. The read-more button
+   is injected by JS only on cards that actually overflow. */
+.testimonial-text--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
+  overflow: hidden;
+}
+
+.testimonial-text--expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+}
+
+.testimonial-readmore {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: -0.25rem 0 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--brown);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-readmore:hover,
+.testimonial-readmore:focus-visible {
+  color: var(--brown-deep);
 }
 
 .testimonial-author {
@@ -2062,6 +2130,138 @@ a[x-apple-data-detectors],
 }
 .litter-upcoming .litter-header .eyebrow {
   color: var(--blue);
+}
+
+/* The whole thumbnail is now a link to the detail page */
+a.litter-thumb {
+  cursor: pointer;
+  transition: transform 200ms ease;
+}
+a.litter-thumb:hover img,
+a.litter-thumb:focus-visible img {
+  transform: scale(1.02);
+}
+a.litter-thumb img {
+  transition: transform 300ms ease;
+}
+
+.litter-title-link {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 200ms ease;
+}
+.litter-title-link:hover,
+.litter-title-link:focus-visible {
+  background-size: 100% 1px;
+}
+
+.litter-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+
+/* =============================================================================
+   LITTER PROFILE (litter.html?id=...)
+   ============================================================================= */
+.litter-profile {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1rem 0 4rem;
+}
+
+.litter-profile-header {
+  margin-bottom: 1.5rem;
+}
+.litter-profile-header h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--brown);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.1;
+  margin: 0.4rem 0 0.5rem;
+}
+
+.litter-profile-cover {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  background: var(--cream-deep);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.litter-profile-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.litter-summary--lead {
+  font-size: 1.15rem;
+  color: var(--brown-soft);
+  margin-bottom: 1.25rem;
+}
+
+.litter-profile-body {
+  color: var(--charcoal);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.litter-profile-body p {
+  margin-bottom: 1rem;
+}
+.litter-profile-body p:last-child {
+  margin-bottom: 0;
+}
+.litter-profile-body .cat-bio-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--brown);
+  font-size: 1.3rem;
+  margin: 1.75rem 0 0.5rem;
+}
+.litter-profile-body .cat-bio-list {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+
+.litter-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin: 0.5rem 0 2rem;
+}
+@media (min-width: 700px) {
+  .litter-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+.litter-gallery-item {
+  aspect-ratio: 1 / 1;
+  background: var(--cream-deep);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.litter-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.litter-profile-cta {
+  margin-top: 1rem;
 }
 
 

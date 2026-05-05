@@ -106,15 +106,29 @@ const cats = readCollection(path.join(CONTENT, 'cats')).map(c => ({
   photos: Array.isArray(c.photos) ? c.photos : []
 }));
 
-const kittens = readCollection(path.join(CONTENT, 'kittens')).map(k => ({
-  name: k.name || '',
-  breed: k.breed || '',
-  sex: k.sex || '',
-  colour: k.colour || '',
-  price: k.price || '',
-  status: k.status || 'Available',
-  photo: k.photo || ''
-}));
+const kittens = readCollection(path.join(CONTENT, 'kittens'))
+  // active: false hides a kitten file (e.g. the _template.md) from the site
+  .filter(k => k.active !== false)
+  .map(k => ({
+    id: k.id || k._file.replace(/\.md$/, ''),
+    name: k.name || '',
+    breed: k.breed || '',
+    sex: k.sex || '',
+    colour: k.colour || '',
+    dob: k.dob || '',
+    availableFrom: k.availableFrom || '',
+    price: k.price || '',
+    status: k.status || 'Available',
+    dam: k.dam || '',
+    sireId: k.sireId || '',
+    sireName: k.sireName || '',
+    litterId: k.litterId || '',
+    // photos: array preferred. Falls back to legacy single `photo` field.
+    photos: Array.isArray(k.photos) && k.photos.length
+      ? k.photos
+      : (k.photo ? [k.photo] : []),
+    notes: k._body || ''
+  }));
 
 const litters = readCollection(path.join(CONTENT, 'litters')).map(l => ({
   id: l.id || l._file.replace(/\.md$/, ''),
@@ -128,6 +142,8 @@ const litters = readCollection(path.join(CONTENT, 'litters')).map(l => ({
   kittenCount: l.kittenCount || '',
   summary: l.summary || '',
   thumbnail: l.thumbnail || '',
+  // Optional gallery for the per-litter detail page (litter.html?id=...)
+  photos: Array.isArray(l.photos) ? l.photos : [],
   body: l._body || ''
 }));
 
