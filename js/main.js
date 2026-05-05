@@ -937,7 +937,7 @@ function renderStuds(targetId) {
           <span class="stud-card-breed">${escapeHtml(stud.breed)} Stud</span>
           <h3>${escapeHtml(stud.name)}</h3>
           <p style="color: var(--grey); margin-bottom: 0.5rem;">${escapeHtml(stud.colour)}</p>
-          <p>${escapeHtml(stud.personality)}</p>
+          <div class="stud-personality">${renderCatPersonality(stud.personality)}</div>
           ${stud.registration ? `<p style="font-size: 0.85rem; color: var(--grey);">${escapeHtml(stud.registration)}</p>` : ''}
           <a href="cat.html?id=${encodeURIComponent(stud.id)}" class="btn btn-outline btn-small mt-1">Full profile</a>
         </div>
@@ -992,7 +992,125 @@ function setupFooter() {
 function observeFadeIns(_root) { /* intentionally empty */ }
 
 
+/* ---------- Lightbox: click any zoomable image to enlarge ----------
+   Driven by a delegated click matched against a selector list. Works for
+   images that are rendered dynamically (cat galleries, kitten cards,
+   litter detail page, etc.) without per-page wiring.
+   Images already wrapped in <a> are skipped — that click belongs to the
+   link. */
+const LIGHTBOX_SELECTORS = [
+  '.cat-gallery-item img',
+  '.litter-gallery-item img',
+  '.litter-profile-cover img',
+  '.past-kitten-photo img',
+  '.about-photo img',
+  '.kitten-suite-photo img',
+  '.kitten-card-image img',
+  '.three-families-photo img',
+  '.hero-with-image img'
+].join(', ');
+
+function initLightbox() {
+  let overlay = null;
+  let lastFocus = null;
+
+  function shouldZoom(target) {
+    if (!target || target.tagName !== 'IMG') return false;
+    if (!target.matches(LIGHTBOX_SELECTORS)) return false;
+    if (target.closest('a')) return false;
+    return true;
+  }
+
+  function buildOverlay() {
+    const el = document.createElement('div');
+    el.className = 'lightbox';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.innerHTML = `
+      <button type="button" class="lightbox-close" aria-label="Close">×</button>
+      <img class="lightbox-image" alt="">
+      <p class="lightbox-caption" hidden></p>
+    `;
+    document.body.appendChild(el);
+    el.addEventListener('click', (e) => {
+      if (e.target === el || e.target.classList.contains('lightbox-close')) {
+        closeLightbox();
+      }
+    });
+    return el;
+  }
+
+  function openLightbox(img) {
+    if (!overlay) overlay = buildOverlay();
+    const big = overlay.querySelector('.lightbox-image');
+    const cap = overlay.querySelector('.lightbox-caption');
+    big.src = img.currentSrc || img.src;
+    big.alt = img.alt || '';
+    if (img.alt) {
+      cap.textContent = img.alt;
+      cap.hidden = false;
+    } else {
+      cap.hidden = true;
+    }
+    lastFocus = document.activeElement;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+    overlay.querySelector('.lightbox-close').focus();
+  }
+
+  function closeLightbox() {
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  // Make matching images discoverable to mouse + screen readers.
+  // Delegated click means we don't have to re-tag after dynamic renders.
+  // The hover cursor comes from the .lightbox-trigger class added via a
+  // single MutationObserver run + an observer that tags new images too.
+  function tagTriggersIn(root) {
+    const imgs = (root || document).querySelectorAll(LIGHTBOX_SELECTORS);
+    imgs.forEach(img => {
+      if (img.closest('a')) return;
+      if (img.dataset.lightboxTagged === '1') return;
+      img.classList.add('lightbox-trigger');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', `Enlarge: ${img.alt || 'photo'}`);
+      if (!img.hasAttribute('tabindex')) img.setAttribute('tabindex', '0');
+      img.dataset.lightboxTagged = '1';
+    });
+  }
+
+  tagTriggersIn(document);
+  new MutationObserver(muts => {
+    muts.forEach(m => m.addedNodes.forEach(n => {
+      if (n.nodeType === 1) tagTriggersIn(n);
+    }));
+  }).observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener('click', (e) => {
+    if (shouldZoom(e.target)) {
+      e.preventDefault();
+      openLightbox(e.target);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && overlay.classList.contains('is-open')) {
+      closeLightbox();
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && shouldZoom(e.target)) {
+      e.preventDefault();
+      openLightbox(e.target);
+    }
+  });
+}
+
+
 /* ---------- Boot: run setup after DOM ready ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   setupFooter();
+  initLightbox();
 });

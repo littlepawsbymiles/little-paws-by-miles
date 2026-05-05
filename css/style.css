@@ -2266,6 +2266,113 @@ a.litter-thumb img {
 
 
 /* =============================================================================
+   ABOUT — kitten suite figure
+   ============================================================================= */
+.kitten-suite-photo {
+  margin: 1.5rem 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+.kitten-suite-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* =============================================================================
+   LIGHTBOX — click any zoomable image to enlarge
+   Activated by JS via the [data-zoomable] attribute or matching selectors.
+   ============================================================================= */
+.lightbox-trigger {
+  cursor: zoom-in;
+  transition: opacity 200ms ease;
+}
+.lightbox-trigger:hover,
+.lightbox-trigger:focus-visible {
+  opacity: 0.92;
+  outline: none;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(20, 16, 12, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-md);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  transform: scale(0.98);
+  transition: transform 220ms ease;
+  cursor: zoom-out;
+}
+.lightbox.is-open .lightbox-image {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+}
+.lightbox-close:hover,
+.lightbox-close:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  max-width: 80%;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox,
+  .lightbox-image {
+    transition: none;
+  }
+}
+
+
+/* =============================================================================
    ENQUIRY FORM (smart form, used across pages)
    ============================================================================= */
 .enquiry-form {
