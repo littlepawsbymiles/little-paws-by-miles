@@ -1144,13 +1144,13 @@ section {
 .testimonial-title::before {
   content: "“";
   font-size: 1.4rem;
-  margin-right: 0.25rem;
+  margin-right: 0.05em;
 }
 
 .testimonial-title::after {
   content: "”";
   font-size: 1.4rem;
-  margin-left: 0.25rem;
+  margin-left: 0.05em;
 }
 
 .testimonial-card::before {

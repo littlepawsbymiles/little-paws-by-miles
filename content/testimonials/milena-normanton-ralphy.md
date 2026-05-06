@@ -5,7 +5,7 @@ role: Normanton · Ragdoll Owner
 breed: Ragdoll
 rating: 5
 relatedCat: ralphy
-testimonialTitle: “Reassuring, supportive service for a first-time experience”
+testimonialTitle: Reassuring, supportive service for a first-time experience
 ---
 
 I used Ralphy for my girl Chanel for her first time and I was quite nervous. Julia was warm, friendly and reassuring from the start, which really put me at ease.

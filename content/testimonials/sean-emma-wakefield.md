@@ -5,7 +5,7 @@ role: Wakefield · Maine Coon Stud Owners
 breed: Maine Coon
 rating: 5
 relatedCat: starsky
-testimonialTitle: “A calm, smooth experience with great care throughout”
+testimonialTitle: A calm, smooth experience with great care throughout
 ---
 
 We have a black smoke Maine Coon, Nala, and it was her first time mating, so we weren't quite sure what to expect. Everything was handled really calmly and smoothly.
