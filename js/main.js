@@ -1069,33 +1069,54 @@ function setupFooter() {
 function observeFadeIns(_root) { /* intentionally empty */ }
 
 
-/* ---------- Lightbox: click any zoomable image to enlarge ----------
-   Driven by a delegated click matched against a selector list. Works for
-   images that are rendered dynamically (cat galleries, kitten cards,
-   litter detail page, etc.) without per-page wiring.
-   Images already wrapped in <a> are skipped — that click belongs to the
-   link. */
-const LIGHTBOX_SELECTORS = [
-  '.cat-gallery-item img',
-  '.litter-gallery-item img',
-  '.litter-profile-cover img',
-  '.past-kitten-photo img',
-  '.about-photo img',
-  '.kitten-suite-photo img',
-  '.kitten-card-image img',
-  '.three-families-photo img',
-  '.hero-with-image img'
-].join(', ');
+/* ---------- Lightbox: click a content-page image to enlarge ----------
+   Restricted to images on content pages (cat profiles, litter detail,
+   available-kittens cards, about-page photos). Decorative images on
+   the home hero, three-families panel, etc. are deliberately excluded.
+
+   Some triggers belong to a gallery — clicking one opens a slideshow
+   and the prev/next arrows + left/right keys cycle through siblings
+   in the same gallery container. Singletons just open without nav.
+
+   Images already wrapped in <a> are skipped — the click belongs to
+   the link, not the lightbox. */
+const LIGHTBOX_GROUPS = [
+  // Cyclable galleries — sibling images cycle within the container
+  { trigger: '.cat-gallery-item img',     container: '.cat-gallery'  },
+  { trigger: '.litter-gallery-item img',  container: '.litter-gallery' },
+  { trigger: '.kitten-card-image img',    container: '.kitten-grid'  },
+  // Singletons — no siblings, no nav arrows
+  { trigger: '.litter-profile-cover img', container: null },
+  { trigger: '.kitten-suite-photo img',   container: null },
+  { trigger: '.about-photo img',          container: null }
+];
+const LIGHTBOX_SELECTORS = LIGHTBOX_GROUPS.map(g => g.trigger).join(', ');
 
 function initLightbox() {
   let overlay = null;
   let lastFocus = null;
+  let currentSiblings = [];
+  let currentIndex = 0;
 
   function shouldZoom(target) {
     if (!target || target.tagName !== 'IMG') return false;
     if (!target.matches(LIGHTBOX_SELECTORS)) return false;
     if (target.closest('a')) return false;
     return true;
+  }
+
+  // Find every other image that should cycle with the one clicked.
+  // Returns the trigger itself if it has no gallery container.
+  function findGallerySiblings(img) {
+    for (const group of LIGHTBOX_GROUPS) {
+      if (!img.matches(group.trigger)) continue;
+      if (!group.container) return [img];
+      const container = img.closest(group.container);
+      if (!container) return [img];
+      return Array.from(container.querySelectorAll(group.trigger))
+        .filter(i => !i.closest('a'));
+    }
+    return [img];
   }
 
   function buildOverlay() {
@@ -1105,20 +1126,33 @@ function initLightbox() {
     el.setAttribute('aria-modal', 'true');
     el.innerHTML = `
       <button type="button" class="lightbox-close" aria-label="Close">×</button>
+      <button type="button" class="lightbox-prev" aria-label="Previous image">‹</button>
+      <button type="button" class="lightbox-next" aria-label="Next image">›</button>
       <img class="lightbox-image" alt="">
       <p class="lightbox-caption" hidden></p>
     `;
     document.body.appendChild(el);
     el.addEventListener('click', (e) => {
-      if (e.target === el || e.target.classList.contains('lightbox-close')) {
+      const t = e.target;
+      if (t === el || t.classList.contains('lightbox-close')) {
         closeLightbox();
+      } else if (t.classList.contains('lightbox-next')) {
+        e.stopPropagation();
+        showAt(currentIndex + 1);
+      } else if (t.classList.contains('lightbox-prev')) {
+        e.stopPropagation();
+        showAt(currentIndex - 1);
       }
     });
     return el;
   }
 
-  function openLightbox(img) {
-    if (!overlay) overlay = buildOverlay();
+  // Render the image at `index` into the overlay; wraps around at ends.
+  function showAt(index) {
+    if (!currentSiblings.length) return;
+    const len = currentSiblings.length;
+    currentIndex = ((index % len) + len) % len; // safe wrap (handles negatives)
+    const img = currentSiblings[currentIndex];
     const big = overlay.querySelector('.lightbox-image');
     const cap = overlay.querySelector('.lightbox-caption');
     big.src = img.currentSrc || img.src;
@@ -1129,6 +1163,14 @@ function initLightbox() {
     } else {
       cap.hidden = true;
     }
+    overlay.classList.toggle('is-single', len < 2);
+  }
+
+  function openLightbox(triggerImg) {
+    if (!overlay) overlay = buildOverlay();
+    currentSiblings = findGallerySiblings(triggerImg);
+    const startIndex = currentSiblings.indexOf(triggerImg);
+    showAt(startIndex >= 0 ? startIndex : 0);
     lastFocus = document.activeElement;
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(() => overlay.classList.add('is-open'));
@@ -1144,8 +1186,6 @@ function initLightbox() {
 
   // Make matching images discoverable to mouse + screen readers.
   // Delegated click means we don't have to re-tag after dynamic renders.
-  // The hover cursor comes from the .lightbox-trigger class added via a
-  // single MutationObserver run + an observer that tags new images too.
   function tagTriggersIn(root) {
     const imgs = (root || document).querySelectorAll(LIGHTBOX_SELECTORS);
     imgs.forEach(img => {
@@ -1174,11 +1214,22 @@ function initLightbox() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay && overlay.classList.contains('is-open')) {
+    const open = overlay && overlay.classList.contains('is-open');
+    if (open && e.key === 'Escape') {
       closeLightbox();
       return;
     }
-    if ((e.key === 'Enter' || e.key === ' ') && shouldZoom(e.target)) {
+    if (open && e.key === 'ArrowRight') {
+      e.preventDefault();
+      showAt(currentIndex + 1);
+      return;
+    }
+    if (open && e.key === 'ArrowLeft') {
+      e.preventDefault();
+      showAt(currentIndex - 1);
+      return;
+    }
+    if (!open && (e.key === 'Enter' || e.key === ' ') && shouldZoom(e.target)) {
       e.preventDefault();
       openLightbox(e.target);
     }

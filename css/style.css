@@ -2362,17 +2362,65 @@ a.litter-thumb img {
 
 
 /* =============================================================================
-   LIGHTBOX — click any zoomable image to enlarge
-   Activated by JS via the [data-zoomable] attribute or matching selectors.
+   LIGHTBOX — click a content-page image to enlarge
+   Activated by JS via the .lightbox-trigger class on matching images.
    ============================================================================= */
 .lightbox-trigger {
-  cursor: zoom-in;
-  transition: opacity 200ms ease;
+  cursor: pointer;
+  transition: filter 200ms ease;
 }
 .lightbox-trigger:hover,
 .lightbox-trigger:focus-visible {
-  opacity: 0.92;
+  filter: brightness(0.95);
   outline: none;
+}
+
+/* Hover affordance: a small expand icon appears top-right of any
+   image wrapper that contains a lightbox-trigger. The container needs
+   position: relative — most of these classes already have it; the
+   ones that don't get it here. */
+.cat-gallery-item,
+.litter-gallery-item,
+.litter-profile-cover,
+.kitten-card-image,
+.kitten-suite-photo,
+.about-photo {
+  position: relative;
+}
+
+.cat-gallery-item::after,
+.litter-gallery-item::after,
+.litter-profile-cover::after,
+.kitten-card-image::after,
+.kitten-suite-photo::after,
+.about-photo::after {
+  content: '';
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.55);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='15 3 21 3 21 9'/><polyline points='9 21 3 21 3 15'/><line x1='21' y1='3' x2='14' y2='10'/><line x1='3' y1='21' x2='10' y2='14'/></svg>");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cat-gallery-item:hover::after,
+.litter-gallery-item:hover::after,
+.litter-profile-cover:hover::after,
+.kitten-card-image:hover::after,
+.kitten-suite-photo:hover::after,
+.about-photo:hover::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .lightbox {
@@ -2402,34 +2450,76 @@ a.litter-thumb img {
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
   transform: scale(0.98);
   transition: transform 220ms ease;
-  cursor: zoom-out;
+  cursor: pointer;
 }
 .lightbox.is-open .lightbox-image {
   transform: scale(1);
 }
 
-.lightbox-close {
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border: none;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 200ms ease;
+  transition: background 200ms ease, transform 150ms ease;
+  z-index: 1;
 }
-.lightbox-close:hover,
-.lightbox-close:focus-visible {
+.lightbox-close:hover, .lightbox-close:focus-visible,
+.lightbox-prev:hover,  .lightbox-prev:focus-visible,
+.lightbox-next:hover,  .lightbox-next:focus-visible {
   background: rgba(255, 255, 255, 0.22);
   outline: none;
+}
+
+.lightbox-close {
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.4rem;
+}
+
+.lightbox-prev {
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  padding-bottom: 4px; /* optical centring of the chevron glyph */
+}
+.lightbox-next {
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  padding-bottom: 4px;
+}
+.lightbox-prev:hover,
+.lightbox-prev:focus-visible {
+  transform: translateY(-50%) translateX(-2px);
+}
+.lightbox-next:hover,
+.lightbox-next:focus-visible {
+  transform: translateY(-50%) translateX(2px);
+}
+
+/* Singleton mode — when there are no siblings to cycle to */
+.lightbox.is-single .lightbox-prev,
+.lightbox.is-single .lightbox-next {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
 }
 
 .lightbox-caption {
