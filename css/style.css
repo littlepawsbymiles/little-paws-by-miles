@@ -2453,6 +2453,88 @@ a.litter-thumb img {
 
 
 /* =============================================================================
+   TESTIMONIAL MODAL
+   Opens when "Read more" is clicked on a clamped testimonial card.
+   The cloned card inside keeps its full card styling — the modal only
+   provides the centered overlay + close affordance.
+   ============================================================================= */
+.testimonial-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(20, 16, 12, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  overflow-y: auto;
+}
+.testimonial-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.testimonial-modal-panel {
+  width: 100%;
+  max-width: 620px;
+  transform: scale(0.98) translateY(8px);
+  transition: transform 220ms ease;
+}
+.testimonial-modal.is-open .testimonial-modal-panel {
+  transform: scale(1) translateY(0);
+}
+
+/* The cloned testimonial card sits inside the panel and keeps its
+   normal styling — but in the modal it's roomier and doesn't need
+   the clamp behaviour. */
+.testimonial-modal-panel .testimonial-card {
+  background: var(--cream-deep);
+  padding: 2rem 2rem 1.75rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+@media (min-width: 640px) {
+  .testimonial-modal-panel .testimonial-card {
+    padding: 2.5rem 2.5rem 2rem;
+  }
+}
+
+.testimonial-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+}
+.testimonial-modal-close:hover,
+.testimonial-modal-close:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-modal,
+  .testimonial-modal-panel {
+    transition: none;
+  }
+}
+
+
+/* =============================================================================
    ENQUIRY FORM (smart form, used across pages)
    ============================================================================= */
 .enquiry-form {

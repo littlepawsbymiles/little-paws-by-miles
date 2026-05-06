@@ -831,9 +831,13 @@ function renderTestimonialCard(t, opts) {
 
 
 /* For each testimonial within `root`, decide whether the text overflows
-   its clamped box. If it does, inject a Read more / Show less toggle.
-   Runs after rendering, and again on resize (the clamp threshold can
-   change with column width). */
+   its clamped box. If it does, inject a "Read more" link that opens
+   the full testimonial in a modal. Inline expansion was disturbing
+   row neighbours via CSS Grid's default align-items: stretch, which
+   stretched short cards alongside any expanded one. The modal route
+   keeps the grid pristine and gives long quotes proper breathing room.
+   Re-runs on resize because column-width changes alter the clamp
+   threshold. */
 function attachReadMoreToggles(root) {
   if (!root) return;
   const cards = root.querySelectorAll('.testimonial-card');
@@ -841,9 +845,7 @@ function attachReadMoreToggles(root) {
     const text = card.querySelector('.testimonial-text');
     if (!text) return;
 
-    // Reset to clamped state so we measure overflow accurately
     text.classList.add('testimonial-text--clamped');
-    text.classList.remove('testimonial-text--expanded');
 
     // Remove any previously-injected button so re-runs don't duplicate
     const existing = card.querySelector('.testimonial-readmore');
@@ -856,13 +858,8 @@ function attachReadMoreToggles(root) {
     btn.type = 'button';
     btn.className = 'testimonial-readmore';
     btn.textContent = 'Read more';
-    btn.setAttribute('aria-expanded', 'false');
-    btn.addEventListener('click', () => {
-      const expanded = text.classList.toggle('testimonial-text--expanded');
-      text.classList.toggle('testimonial-text--clamped', !expanded);
-      btn.textContent = expanded ? 'Show less' : 'Read more';
-      btn.setAttribute('aria-expanded', String(expanded));
-    });
+    btn.setAttribute('aria-haspopup', 'dialog');
+    btn.addEventListener('click', () => openTestimonialModal(card));
 
     // Insert just after the text, before the author block
     text.insertAdjacentElement('afterend', btn);
@@ -881,6 +878,79 @@ function attachReadMoreToggles(root) {
     }, 150);
   });
 })();
+
+
+/* ---------- Testimonial modal ----------
+   Pops the full testimonial into a centered overlay so expanding one
+   doesn't stretch its row neighbours in the grid. The modal clones
+   the source card so styling stays consistent — just unclamped. */
+let testimonialModalOverlay = null;
+let testimonialModalLastFocus = null;
+
+function buildTestimonialModal() {
+  const el = document.createElement('div');
+  el.className = 'testimonial-modal';
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
+  el.setAttribute('aria-label', 'Testimonial');
+  el.innerHTML = `
+    <button type="button" class="testimonial-modal-close" aria-label="Close">×</button>
+    <div class="testimonial-modal-panel"></div>
+  `;
+  document.body.appendChild(el);
+
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.classList.contains('testimonial-modal-close')) {
+      closeTestimonialModal();
+    }
+  });
+  return el;
+}
+
+function openTestimonialModal(sourceCard) {
+  if (!testimonialModalOverlay) testimonialModalOverlay = buildTestimonialModal();
+  const panel = testimonialModalOverlay.querySelector('.testimonial-modal-panel');
+
+  // Clone the source card so the modal mirrors the on-page styling
+  const clone = sourceCard.cloneNode(true);
+
+  // Strip the "Read more" button from the clone — not needed in the modal
+  const cloneBtn = clone.querySelector('.testimonial-readmore');
+  if (cloneBtn) cloneBtn.remove();
+
+  // Unclamp the quote so the full text shows
+  const cloneText = clone.querySelector('.testimonial-text');
+  if (cloneText) {
+    cloneText.classList.remove('testimonial-text--clamped');
+    cloneText.classList.add('testimonial-text--expanded');
+  }
+
+  // Avoid the fade-in re-triggering inside the modal
+  clone.classList.remove('fade-in');
+
+  panel.innerHTML = '';
+  panel.appendChild(clone);
+
+  testimonialModalLastFocus = document.activeElement;
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => testimonialModalOverlay.classList.add('is-open'));
+  testimonialModalOverlay.querySelector('.testimonial-modal-close').focus();
+}
+
+function closeTestimonialModal() {
+  if (!testimonialModalOverlay) return;
+  testimonialModalOverlay.classList.remove('is-open');
+  document.body.style.overflow = '';
+  if (testimonialModalLastFocus && typeof testimonialModalLastFocus.focus === 'function') {
+    testimonialModalLastFocus.focus();
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && testimonialModalOverlay && testimonialModalOverlay.classList.contains('is-open')) {
+    closeTestimonialModal();
+  }
+});
 
 
 /* ---------- Render: Form embed (Tally / Typeform / placeholder) ---------- */
