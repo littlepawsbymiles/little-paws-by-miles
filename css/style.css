@@ -326,62 +326,89 @@ section {
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  border: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, background-color 0.2s ease,
+              box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   white-space: nowrap;
 }
 
+/* Primary — the main button across the site. Cream pill, brown text,
+   soft brown shadow. Same look everywhere, including over the
+   Ken Burns hero (no special variant required). */
 .btn-primary {
-  background: var(--terracotta);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--brown);
+  border-color: var(--cream-deep);
+  box-shadow: 0 2px 6px rgba(146, 100, 64, 0.18),
+              0 4px 14px rgba(146, 100, 64, 0.10);
 }
-
-.btn-primary:hover {
-  background: var(--terracotta-deep);
-  color: var(--cream);
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: #fff;
+  color: var(--brown-deep);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
+  box-shadow: 0 4px 10px rgba(146, 100, 64, 0.22),
+              0 8px 22px rgba(146, 100, 64, 0.14);
+  outline: none;
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(146, 100, 64, 0.18);
 }
 
-.btn-secondary {
-  background: var(--sage);
-  color: var(--cream);
-}
-
-.btn-secondary:hover {
-  background: var(--sage-deep);
-  color: var(--cream);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
+/* Secondary — same warm family, less weight. Outline that fills on
+   hover so it reads clearly as actionable. */
 .btn-outline {
   background: transparent;
-  color: var(--charcoal);
-  border: 1.5px solid var(--border);
+  color: var(--brown);
+  border-color: var(--brown);
 }
-
-.btn-outline:hover {
-  background: var(--cream-deep);
-  color: var(--charcoal);
-  border-color: var(--sage);
-}
-
-/* Hero buttons — bolder than .btn-outline, used on the homepage hero only.
-   Soft blue background with a confident border so they catch the eye against
-   the cream hero, without going full-blue (which would make them shout). */
-.btn-hero {
-  background: var(--pale-blue);
-  color: var(--blue-deep);
-  border: 1.5px solid var(--blue);
-  font-weight: 600;
-}
-.btn-hero:hover {
-  background: var(--blue);
-  color: #fff;
-  border-color: var(--blue);
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  background: var(--brown);
+  color: var(--cream);
+  border-color: var(--brown);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(79, 122, 177, 0.18);
+  outline: none;
+}
+.btn-outline:active {
+  transform: translateY(0);
+}
+
+/* Retained for backwards-compatibility with anywhere .btn-secondary
+   is referenced — visually identical to primary in the new system. */
+.btn-secondary {
+  background: var(--cream);
+  color: var(--brown);
+  border-color: var(--cream-deep);
+  box-shadow: 0 2px 6px rgba(146, 100, 64, 0.18),
+              0 4px 14px rgba(146, 100, 64, 0.10);
+}
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background: #fff;
+  color: var(--brown-deep);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* Alias of .btn-primary kept so legacy markup using btn-hero still
+   works. New markup should use btn-primary directly. */
+.btn-hero {
+  background: var(--cream);
+  color: var(--brown);
+  border-color: var(--cream-deep);
+  box-shadow: 0 2px 6px rgba(146, 100, 64, 0.18),
+              0 4px 14px rgba(146, 100, 64, 0.10);
+}
+.btn-hero:hover,
+.btn-hero:focus-visible {
+  background: #fff;
+  color: var(--brown-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(146, 100, 64, 0.22),
+              0 8px 22px rgba(146, 100, 64, 0.14);
+  outline: none;
 }
 
 .btn-small {
@@ -496,15 +523,10 @@ section {
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
 }
-.hero-with-image .btn-hero {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: #fff;
-  color: var(--blue-deep);
-}
-.hero-with-image .btn-hero:hover {
-  background: #fff;
-  color: var(--brown);
-}
+/* The unified .btn-primary look (cream pill, brown text, soft brown
+   shadow) reads cleanly against the photo hero already, so no
+   .hero-with-image override is needed. Buttons are identical
+   site-wide. */
 
 /* Decorative blurred circles — only shown without an image */
 .hero:not(.hero-with-image)::before,
