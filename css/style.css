@@ -398,14 +398,67 @@ section {
   overflow: hidden;
 }
 
-/* If a hero image is supplied, set on the .hero element via inline style or here.
-   Adding the .hero-with-image class enables the image overlay layout. */
+/* The hero now uses a stack of <img> elements (.hero-bg-img inside
+   .hero-bg) with a slow Ken Burns crossfade. The brown overlay keeps
+   the white text readable on top. */
 .hero-with-image {
-  background-image: url('../images/hero.jpg');
-  background-size: cover;
-  background-position: center 35%;
   padding: 7rem 0 7rem;
   color: #fff;
+}
+
+.hero-with-image .hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  opacity: 0;
+  will-change: transform, opacity;
+  /* The animation cycles through each image. animation-delay below
+     staggers them so they crossfade into one another. */
+  animation: heroKenBurns 42s ease-in-out infinite;
+}
+
+/* 6 images, 7s display each, 1.5s fade — total loop 42s.
+   Each image's "visible" window is its 7s slot, with its own fade in
+   and slight zoom. Timing across the six staggered delays makes the
+   end of one overlap the start of the next. */
+.hero-bg-img:nth-child(1) { animation-delay: 0s;  }
+.hero-bg-img:nth-child(2) { animation-delay: 7s;  }
+.hero-bg-img:nth-child(3) { animation-delay: 14s; }
+.hero-bg-img:nth-child(4) { animation-delay: 21s; }
+.hero-bg-img:nth-child(5) { animation-delay: 28s; }
+.hero-bg-img:nth-child(6) { animation-delay: 35s; }
+
+@keyframes heroKenBurns {
+  /* Each image is fully transparent for ~5/6 of the total cycle
+     and visible during a 7s + crossfade window at the start. */
+  0%   { opacity: 0; transform: scale(1.0); }
+  2%   { opacity: 1; }
+  17%  { opacity: 1; transform: scale(1.08); } /* end of 7s display ≈ 16.66% of 42s */
+  20%  { opacity: 0; transform: scale(1.10); }
+  100% { opacity: 0; transform: scale(1.10); }
+}
+
+/* Reduced motion — show the first image static, hide the rest.
+   No animations, no zoom, no surprises. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-img {
+    animation: none;
+    opacity: 0;
+  }
+  .hero-bg-img:first-child {
+    opacity: 1;
+  }
 }
 
 /* Brand-toned overlay over the hero image — keeps it readable
@@ -420,8 +473,13 @@ section {
     rgba(58, 54, 51, 0.55) 60%,
     rgba(146, 100, 64, 0.55) 100%
   );
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
+}
+
+.hero-with-image .container {
+  position: relative;
+  z-index: 2;
 }
 
 .hero-with-image .eyebrow {
