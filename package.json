@@ -7,6 +7,10 @@
     "build": "node scripts/build-data.js",
     "migrate": "node scripts/migrate.js"
   },
+  "dependencies": {
+    "clean-css": "^5.3.3",
+    "terser": "^5.36.0"
+  },
   "engines": {
     "node": ">=18"
   }

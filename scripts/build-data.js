@@ -222,3 +222,67 @@ fs.writeFileSync(OUT, out);
 
 console.log(`✓ Wrote ${path.relative(ROOT, OUT)}`);
 console.log(`  ${cats.length} cats, ${kittens.length} kittens, ${litters.length} litters, ${testimonials.length} testimonials`);
+
+
+// ---------- Minification (production builds only) ----------
+// Cloudflare Pages sets CF_PAGES=1 during its build. We only minify in
+// that environment so local builds leave the source files readable for
+// editing. Files are minified in place — Cloudflare publishes from the
+// working directory after this runs, then the next build starts from a
+// fresh git checkout, so source on disk in the repo is never modified.
+if (process.env.CF_PAGES === '1') {
+  (async () => {
+    const CleanCSS = require('clean-css');
+    const Terser = require('terser');
+
+    console.log('Production build — minifying CSS and JS...');
+
+    // CSS — clean-css is synchronous and very fast
+    const cssDir = path.join(ROOT, 'css');
+    const cssFiles = fs.readdirSync(cssDir)
+      .filter(f => f.endsWith('.css') && !f.endsWith('.min.css'));
+    for (const f of cssFiles) {
+      const p = path.join(cssDir, f);
+      const input = fs.readFileSync(p, 'utf8');
+      const result = new CleanCSS({ returnPromise: false }).minify(input);
+      if (result.errors.length) {
+        console.error(`  ✗ CSS errors in ${f}:`, result.errors);
+        continue;
+      }
+      fs.writeFileSync(p, result.styles);
+      const saved = ((1 - result.styles.length / input.length) * 100).toFixed(1);
+      console.log(`  ✓ ${f}: ${input.length} → ${result.styles.length} bytes (-${saved}%)`);
+    }
+
+    // JS — terser is async. Default mangle settings preserve top-level
+    // names, which is what we need: HTML inline scripts call functions
+    // like renderCatProfile() and renderEnquiryForm() by name.
+    const jsDir = path.join(ROOT, 'js');
+    const jsFiles = fs.readdirSync(jsDir)
+      .filter(f => f.endsWith('.js') && !f.endsWith('.min.js'));
+    for (const f of jsFiles) {
+      const p = path.join(jsDir, f);
+      const input = fs.readFileSync(p, 'utf8');
+      try {
+        const result = await Terser.minify(input, {
+          compress: { passes: 2 },
+          format: { comments: false }
+        });
+        if (!result.code) {
+          console.error(`  ✗ Terser returned no output for ${f}`);
+          continue;
+        }
+        fs.writeFileSync(p, result.code);
+        const saved = ((1 - result.code.length / input.length) * 100).toFixed(1);
+        console.log(`  ✓ ${f}: ${input.length} → ${result.code.length} bytes (-${saved}%)`);
+      } catch (e) {
+        console.error(`  ✗ Terser failed on ${f}:`, e.message);
+      }
+    }
+  })().catch(e => {
+    console.error('Minification failed:', e);
+    process.exit(1);
+  });
+} else {
+  console.log('Local build — skipping minification (CF_PAGES not set).');
+}
