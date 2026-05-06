@@ -300,8 +300,43 @@ function renderCatProfile(targetId) {
   // Render related testimonials (if any) inside the cat-testimonials placeholder
   renderRelatedTestimonialsForCat(cat);
 
+  // Tag each gallery image with its aspect class so the masonry grid
+  // knows which cells should be tall, wide, or square.
+  attachGalleryAspects(target);
+
   // Inject structured data for this cat
   injectCatStructuredData(cat, businessUrl);
+}
+
+
+/* For each image inside a content-page gallery, detect its aspect
+   from naturalWidth/Height and add a modifier class to the wrapper
+   so the CSS Grid layout can give portraits taller cells, landscapes
+   wider cells, and squares 1×1. Runs after a render and on each
+   image's load event (in case the natural size isn't yet known). */
+function attachGalleryAspects(root) {
+  const imgs = (root || document).querySelectorAll(
+    '.cat-gallery-item img, .litter-gallery-item img'
+  );
+  imgs.forEach(img => {
+    const apply = () => {
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return;
+      const ratio = w / h;
+      const wrapper = img.parentElement;
+      if (!wrapper) return;
+      wrapper.classList.remove(
+        'gallery-item--square',
+        'gallery-item--portrait',
+        'gallery-item--landscape'
+      );
+      if (ratio > 1.15)      wrapper.classList.add('gallery-item--landscape');
+      else if (ratio < 0.85) wrapper.classList.add('gallery-item--portrait');
+      else                   wrapper.classList.add('gallery-item--square');
+    };
+    if (img.complete && img.naturalWidth) apply();
+    else img.addEventListener('load', apply, { once: true });
+  });
 }
 
 
@@ -757,6 +792,10 @@ function renderLitterProfile(targetId) {
       </article>
     </div>
   `;
+
+  // Tag each gallery image with its aspect class so the masonry grid
+  // knows which cells should be tall, wide, or square.
+  attachGalleryAspects(target);
 
   injectLitterStructuredData(litter, businessUrl);
 }

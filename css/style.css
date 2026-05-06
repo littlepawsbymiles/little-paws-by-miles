@@ -783,23 +783,25 @@ section {
   }
 }
 
+/* Cat profile gallery — mixed-size masonry-style grid.
+   Each item starts as a generic 2-row-tall slot and gets resized via
+   the JS-applied aspect modifier classes below. grid-auto-flow: dense
+   packs items so portraits and landscapes don't leave obvious gaps. */
 .cat-gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-auto-rows: 90px;
+  grid-auto-flow: dense;
   gap: 0.75rem;
 }
 
 .cat-gallery-item {
-  aspect-ratio: 1 / 1;
   background: var(--cream-deep);
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--border);
-}
-
-.cat-gallery-item:first-child {
-  grid-column: span 2;
-  aspect-ratio: 4 / 3;
+  /* default span (used until JS classifies, and for placeholders) */
+  grid-row: span 2;
 }
 
 .cat-gallery-item img {
@@ -2315,29 +2317,79 @@ a.litter-thumb img {
   padding-left: 1.25rem;
 }
 
+/* Litter detail gallery — same masonry-style grid as cat profiles.
+   See .cat-gallery above for the mechanics. */
 .litter-gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 100px;
+  grid-auto-flow: dense;
   gap: 0.75rem;
   margin: 0.5rem 0 2rem;
 }
 @media (min-width: 700px) {
   .litter-gallery {
-    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
   }
 }
 .litter-gallery-item {
-  aspect-ratio: 1 / 1;
   background: var(--cream-deep);
   border-radius: var(--radius-md);
   overflow: hidden;
+  /* default span (used until JS classifies) */
+  grid-row: span 2;
 }
 .litter-gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+
+/* =============================================================================
+   GALLERY ASPECT MODIFIERS (shared across cat + litter galleries)
+   Applied by JS based on each image's natural width/height. portrait
+   gets 3 rows, landscape gets 3 rows × 2 cols, square keeps the
+   default 2×1.
+   ============================================================================= */
+.cat-gallery-item.gallery-item--square,
+.litter-gallery-item.gallery-item--square {
+  grid-row: span 2;
+}
+.cat-gallery-item.gallery-item--portrait,
+.litter-gallery-item.gallery-item--portrait {
+  grid-row: span 3;
+}
+.cat-gallery-item.gallery-item--landscape,
+.litter-gallery-item.gallery-item--landscape {
+  grid-row: span 3;
+  grid-column: span 2;
+}
+
+/* Mobile fallback — single-column stack with aspect-ratio per item.
+   Row spans are meaningless here so we revert to natural sizing. */
+@media (max-width: 500px) {
+  .cat-gallery,
+  .litter-gallery {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    grid-auto-flow: row;
+  }
+  .cat-gallery-item,
+  .litter-gallery-item {
+    grid-row: auto;
+    grid-column: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .cat-gallery-item.gallery-item--portrait,
+  .litter-gallery-item.gallery-item--portrait {
+    aspect-ratio: 3 / 4;
+  }
+  .cat-gallery-item.gallery-item--landscape,
+  .litter-gallery-item.gallery-item--landscape {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .litter-profile-cta {
