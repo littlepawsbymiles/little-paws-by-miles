@@ -142,9 +142,13 @@ function renderCatGrid(targetId) {
 }
 
 function renderCatCard(cat) {
-  const hasPhoto = cat.photos && cat.photos[0];
+  // Card image: use explicit cardImage if set, otherwise fall back to
+  // the first gallery photo. Lets editors choose a different image for
+  // the card vs. the profile gallery.
+  const cardSrc = cat.cardImage || (cat.photos && cat.photos[0]) || '';
+  const hasPhoto = !!cardSrc;
   const img = hasPhoto
-    ? `<img src="${escapeHtml(cat.photos[0])}" alt="${escapeHtml(cat.name)}, ${escapeHtml(cat.colour)} ${escapeHtml(cat.breed)} ${escapeHtml(cat.role.toLowerCase())}" loading="lazy">`
+    ? `<img src="${escapeHtml(cardSrc)}" alt="${escapeHtml(cat.name)}, ${escapeHtml(cat.colour)} ${escapeHtml(cat.breed)} ${escapeHtml(cat.role.toLowerCase())}" loading="lazy">`
     : `<div class="cat-card-image placeholder">${getCatInitial(cat.name)}</div>`;
 
   const tagline = cat.tagline ? `<p class="cat-card-tagline">${escapeHtml(cat.tagline)}</p>` : '';
@@ -440,7 +444,8 @@ function renderKittens(targetId) {
 
 function renderKittenCard(kitten) {
   const photos = Array.isArray(kitten.photos) ? kitten.photos.filter(p => p && p.length) : [];
-  const coverPhoto = photos[0] || '';
+  // Card image: explicit cardImage wins, otherwise first photo from the gallery.
+  const coverPhoto = kitten.cardImage || photos[0] || '';
   const hasPhoto = !!coverPhoto;
   const img = hasPhoto
     ? `<img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(kitten.name)}" loading="lazy">`
@@ -693,9 +698,11 @@ function renderLitterProfile(targetId) {
     ? `<div class="litter-parents">${parentsBits.join('')}</div>`
     : '';
 
-  // Cover image — thumbnail (kept as the canonical hero) plus optional gallery
-  const cover = litter.thumbnail && litter.thumbnail.length
-    ? `<img src="${escapeHtml(litter.thumbnail)}" alt="${escapeHtml(litter.title)}" loading="lazy">`
+  // Cover image — prefer the dedicated coverImage field if set, otherwise
+  // fall back to the thumbnail (the same image used on the litters list card).
+  const coverSrc = litter.coverImage || litter.thumbnail || '';
+  const cover = coverSrc.length
+    ? `<img src="${escapeHtml(coverSrc)}" alt="${escapeHtml(litter.title)}" loading="lazy">`
     : `<span class="litter-thumb-placeholder">${
         escapeHtml(((dam && dam.name) || litter.title || 'L').charAt(0).toUpperCase())
       }</span>`;

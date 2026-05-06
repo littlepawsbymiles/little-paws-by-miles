@@ -103,6 +103,8 @@ const cats = readCollection(path.join(CONTENT, 'cats')).map(c => ({
   tagline: c.tagline || '',
   personality: c._body || '',
   siblings: Array.isArray(c.siblings) ? c.siblings : [],
+  // Optional explicit card image. Falls back to photos[0] in the renderer.
+  cardImage: c.cardImage || '',
   photos: Array.isArray(c.photos) ? c.photos : []
 }));
 
@@ -123,6 +125,8 @@ const kittens = readCollection(path.join(CONTENT, 'kittens'))
     sireId: k.sireId || '',
     sireName: k.sireName || '',
     litterId: k.litterId || '',
+    // Optional explicit card image. Falls back to photos[0] in the renderer.
+    cardImage: k.cardImage || '',
     // photos: array preferred. Falls back to legacy single `photo` field.
     photos: Array.isArray(k.photos) && k.photos.length
       ? k.photos
@@ -141,7 +145,11 @@ const litters = readCollection(path.join(CONTENT, 'litters')).map(l => ({
   dateLabel: l.dateLabel || '',
   kittenCount: l.kittenCount || '',
   summary: l.summary || '',
+  // thumbnail = small image used on the litters list cards.
+  // coverImage = larger hero image at the top of the detail page.
+  // If coverImage is omitted the detail page falls back to thumbnail.
   thumbnail: l.thumbnail || '',
+  coverImage: l.coverImage || '',
   // Optional gallery for the per-litter detail page (litter.html?id=...)
   photos: Array.isArray(l.photos) ? l.photos : [],
   body: l._body || ''

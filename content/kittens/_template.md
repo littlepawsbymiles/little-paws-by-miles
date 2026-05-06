@@ -47,11 +47,17 @@ price: ""            # display string, e.g. "£950"
 #   Sold       → grey badge, no enquiry button
 status: Available
 
-# Photos — first one is used as the card image. Add as many as you like.
+# Optional explicit card image. Useful when you want the
+# available-kittens grid to show a different photo than the first one
+# in the gallery (e.g. a tighter crop). Leave blank to use photos[0].
+cardImage: ""
+
+# Photos — first one is used as the card image unless cardImage is set
+# above. Add as many as you like.
 photos: []
 # photos:
-#   - images/kittens/template-kitten/template-kitten-001.jpg
-#   - images/kittens/template-kitten/template-kitten-002.jpg
+#   - images/kittens/template-kitten/template-kitten-001.webp
+#   - images/kittens/template-kitten/template-kitten-002.webp
 ---
 
 A short paragraph or two about this kitten — personality, quirks, what
