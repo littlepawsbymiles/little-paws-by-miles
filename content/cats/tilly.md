@@ -10,11 +10,11 @@ tagline: Cheeky, curious, and keeps us entertained every single day.
 siblings:
   - billie
 photos:
-  - images/cats/tilly/tilly-001.jpg
-  - images/cats/tilly/tilly-002.jpg
-  - images/cats/tilly/tilly-003.jpg
-  - images/cats/tilly/tilly-004.jpg
-  - images/cats/tilly/tilly-005.jpg
+  - images/cats/tilly/tilly-001.webp
+  - images/cats/tilly/tilly-002.webp
+  - images/cats/tilly/tilly-003.webp
+  - images/cats/tilly/tilly-004.webp
+  - images/cats/tilly/tilly-005.webp
 ---
 
 And then there's Tilly. Classic tabby markings on a rich amber coat, strong bloodlines behind her, and a personality that keeps us entertained every single day.

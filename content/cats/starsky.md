@@ -11,10 +11,10 @@ studRegisterUrl: https://online.gccfcats.org/Online/CatManager/StudMap
 tagline: GCCF & TICA Blue Silver Mackerel Tabby. Officially listed on the GCCF Stud Register.
 siblings: []
 photos:
-  - images/cats/starsky/starsky-001.jpg
-  - images/cats/starsky/starsky-002.jpg
-  - images/cats/starsky/starsky-003.jpg
-  - images/cats/starsky/starsky-004.jpg
+  - images/cats/starsky/starsky-001.webp
+  - images/cats/starsky/starsky-002.webp
+  - images/cats/starsky/starsky-003.webp
+  - images/cats/starsky/starsky-004.webp
 ---
 
 Starsky is a young male of real Maine Coon type. Large, substantial, and built the way the breed ought to be. Broad chest, strong bone, square muzzle, high-set ears with proper lynx tips, and deep emerald eyes that give him a wild-but-gentle look.

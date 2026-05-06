@@ -9,11 +9,11 @@ registration: ""
 tagline: The quiet one. A plush coat, a round face, and a knack for finding sunshine.
 siblings: []
 photos:
-  - images/cats/annie/annie-1.jpg
-  - images/cats/annie/annie-2.jpg
-  - images/cats/annie/annie-3.jpg
-  - images/cats/annie/annie-4.jpg
-  - images/cats/annie/annie-5.jpg
+  - images/cats/annie/annie-1.webp
+  - images/cats/annie/annie-2.webp
+  - images/cats/annie/annie-3.webp
+  - images/cats/annie/annie-4.webp
+  - images/cats/annie/annie-5.webp
 ---
 
 Annie is the quiet one. A plush lilac coat, a round face, and a way of finding the sunniest spot in the house within minutes of the light changing.

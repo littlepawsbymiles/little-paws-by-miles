@@ -9,10 +9,10 @@ registration: TICA Registered
 tagline: The showstopper. Striking markings, expressive eyes, the full Maine Coon package.
 siblings: []
 photos: 
-  - images/cats/bobbie/bobbie-001.jpg
-  - images/cats/bobbie/bobbie-002.jpg
-  - images/cats/bobbie/bobbie-003.jpg
-  - images/cats/bobbie/bobbie-004.jpg
+  - images/cats/bobbie/bobbie-001.webp
+  - images/cats/bobbie/bobbie-002.webp
+  - images/cats/bobbie/bobbie-003.webp
+  - images/cats/bobbie/bobbie-004.webp
 ---
 
 Bobbie is the showstopper. Striking markings, expressive eyes, and the kind of presence Maine Coons are famous for. She walks into a room and people notice.

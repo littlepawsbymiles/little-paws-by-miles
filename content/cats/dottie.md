@@ -10,11 +10,11 @@ tagline: Properly affectionate, with a coat like velvet and soulful blue eyes.
 siblings:
   - cookie
 photos:
-  - images/cats/dottie/dottie-001.jpg
-  - images/cats/dottie/dottie-002.jpg
-  - images/cats/dottie/dottie-003.jpg
-  - images/cats/dottie/dottie-004.jpg
-  - images/cats/dottie/dottie-005.jpg
+  - images/cats/dottie/dottie-001.webp
+  - images/cats/dottie/dottie-002.webp
+  - images/cats/dottie/dottie-003.webp
+  - images/cats/dottie/dottie-004.webp
+  - images/cats/dottie/dottie-005.webp
 ---
 
 Dottie is Cookie's sister, and where Cookie is gentle, Dottie is properly affectionate. Stroke her coat and it feels like velvet. Ask her for a cuddle and she'll roll straight onto her back for a tummy rub without a second thought.

@@ -10,7 +10,9 @@ sireName: ""
 dateLabel: "Born 1st May 2026"
 kittenCount: "5 kittens"
 summary: "Cookie's first litter has arrived: five healthy kittens born 1st May."
-thumbnail: images/cats/cookie/cookie-litter-thumbnail.jpg
+thumbnail: images/cats/cookie/cookie-litter-thumbnail.webp
+photos:
+  - images/litters/cookies-litter-may/cookies-litter-1.webp
 ---
 
 Cookie's kittens have arrived.

@@ -9,10 +9,10 @@ registration: GCCF Registered
 tagline: Our blue point girl, and probably the softest soul in the house.
 siblings: []
 photos:
-  - images/cats/bella/bella-1.jpg
-  - images/cats/bella/bella-2.jpg
-  - images/cats/bella/bella-3.jpg
-  - images/cats/bella/bella-with-kittens.jpg
+  - images/cats/bella/bella-1.webp
+  - images/cats/bella/bella-2.webp
+  - images/cats/bella/bella-3.webp
+  - images/cats/bella/bella-with-kittens.webp
 ---
 
 Bella is our blue point girl, and probably the softest soul in the house. Her pedigree is something we're genuinely proud of. She comes from a line full of Champions and Grand Champions, and she carries chocolate and dilute, which makes her particularly interesting from a breeding point of view.

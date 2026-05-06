@@ -10,7 +10,7 @@ sireName: ""
 dateLabel: "Expected soon, date to be confirmed"
 kittenCount: ""
 summary: "A new litter coming from Dottie."
-thumbnail: images/cats/dottie/dotte-002.jpg
+thumbnail: images/cats/dottie/dottie-001.webp
 ---
 
 Dottie is expecting her next litter, we couldn't be more excited for her.
