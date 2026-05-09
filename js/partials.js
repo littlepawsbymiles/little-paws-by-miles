@@ -26,8 +26,9 @@
       .catch(() => { if (after) after(); });
   }
 
-  // Load header first, then footer
-  loadPartial('site-header-placeholder', 'partials/header.html', () => {
+  // Load header first, then footer. URLs are root-relative so the
+  // partials work from sub-folder pages (e.g. /cats/bella.html) too.
+  loadPartial('site-header-placeholder', '/partials/header.html', () => {
     // Mark active link(s)
     if (activePage) {
       document.querySelectorAll(`[data-nav="${activePage}"]`).forEach(a => {
@@ -46,7 +47,7 @@
     }
   });
 
-  loadPartial('site-footer-placeholder', 'partials/footer.html', () => {
+  loadPartial('site-footer-placeholder', '/partials/footer.html', () => {
     const yearEl = document.getElementById('footer-year');
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
     if (typeof BUSINESS !== 'undefined') {

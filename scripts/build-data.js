@@ -224,6 +224,280 @@ console.log(`✓ Wrote ${path.relative(ROOT, OUT)}`);
 console.log(`  ${cats.length} cats, ${kittens.length} kittens, ${litters.length} litters, ${testimonials.length} testimonials`);
 
 
+// ---------- Pre-render content pages ----------
+// Each cat and litter gets a real HTML file at cats/<id>.html and
+// litters/<id>.html with the title, meta tags, OG tags, canonical URL,
+// and the full body content inlined. Crawlers without JS execution
+// (Semrush, Ahrefs first pass, social link previewers) see real per-
+// page HTML; users get instant first paint; JS hydrates the dynamic
+// features (lightbox, gallery aspect detection, related testimonials)
+// on top by detecting the data-cat-id / data-litter-id attributes.
+console.log('Pre-rendering content pages...');
+
+const SITE_URL = (BUSINESS && BUSINESS.url) ? BUSINESS.url : 'https://littlepawsbymiles.co.uk/';
+
+function htmlEscape(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Mirror of renderCatPersonality in main.js — handles ## headings,
+// bullet lists, and paragraphs. Used to render cat bio + litter body.
+function renderMarkdownish(raw) {
+  if (!raw) return '';
+  const blocks = raw.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  return blocks.map(block => {
+    if (/^##\s+/.test(block) && !block.includes('\n')) {
+      return `<h3 class="cat-bio-heading">${htmlEscape(block.replace(/^##\s+/, ''))}</h3>`;
+    }
+    const lines = block.split('\n');
+    if (lines.every(l => /^-\s+/.test(l))) {
+      const items = lines.map(l => `<li>${htmlEscape(l.replace(/^-\s+/, ''))}</li>`).join('');
+      return `<ul class="cat-bio-list">${items}</ul>`;
+    }
+    return `<p>${htmlEscape(block)}</p>`;
+  }).join('\n');
+}
+
+function pageShell({title, description, canonicalUrl, ogImage, dataPage, body, scriptInit}) {
+  return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${htmlEscape(title)}</title>
+  <meta name="description" content="${htmlEscape(description)}">
+  <meta name="author" content="Little Paws By Miles">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${htmlEscape(canonicalUrl)}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Little Paws By Miles">
+  <meta property="og:title" content="${htmlEscape(title)}">
+  <meta property="og:description" content="${htmlEscape(description)}">
+  <meta property="og:url" content="${htmlEscape(canonicalUrl)}">
+  <meta property="og:image" content="${htmlEscape(ogImage)}">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${htmlEscape(title)}">
+  <meta name="twitter:description" content="${htmlEscape(description)}">
+  <meta name="twitter:image" content="${htmlEscape(ogImage)}">
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-page="${htmlEscape(dataPage)}">
+  <div id="site-header-placeholder"></div>
+  <main>
+${body}
+  </main>
+  <div id="site-footer-placeholder"></div>
+  <script src="/js/data.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/partials.js"></script>
+  <script src="/js/enquiry-form.js"></script>
+  <script>${scriptInit}</script>
+</body>
+</html>
+`;
+}
+
+function renderCatPage(cat) {
+  const url = `${SITE_URL}cats/${encodeURIComponent(cat.id)}.html`;
+  const cover = cat.cardImage || (cat.photos && cat.photos[0]) || 'images/logo.png';
+  const ogImage = cover.startsWith('http') ? cover : `${SITE_URL}${cover}`;
+
+  const titleStr = `${cat.name} — ${cat.breed} ${cat.role} — Little Paws By Miles`;
+  const descriptionStr = cat.tagline
+    ? `${cat.name} — ${cat.colour} ${cat.breed} ${cat.role.toLowerCase()} at Little Paws By Miles. ${cat.tagline}`
+    : `Meet ${cat.name}, our ${cat.colour} ${cat.breed} ${cat.role.toLowerCase()} at Little Paws By Miles.`;
+
+  const personalityHtml = renderMarkdownish(cat.personality);
+
+  // Sibling links — resolve from ids to names, link to their pre-rendered pages
+  const siblingsHtml = (cat.siblings && cat.siblings.length) ? (() => {
+    const links = cat.siblings
+      .map(sid => cats.find(c => c.id === sid))
+      .filter(Boolean)
+      .map(s => `<a href="/cats/${encodeURIComponent(s.id)}.html">${htmlEscape(s.name)}</a>`)
+      .join(', ');
+    if (!links) return '';
+    const label = cat.siblings.length === 1 ? 'Sister to' : 'Sisters to';
+    return `<div class="cat-details-meta cat-details-siblings"><span>${label} ${links}</span></div>`;
+  })() : '';
+
+  const photos = (cat.photos || []).filter(p => p && p.length).slice(0, 5);
+  const galleryHtml = photos.length === 0
+    ? Array.from({ length: 4 }).map(() =>
+        `<div class="cat-gallery-item placeholder">${htmlEscape((cat.name || '?').charAt(0).toUpperCase())}</div>`
+      ).join('')
+    : photos.map(p =>
+        `<div class="cat-gallery-item"><img src="/${htmlEscape(p)}" alt="${htmlEscape(cat.name + ', ' + cat.colour + ' ' + cat.breed)}" loading="lazy"></div>`
+      ).join('');
+
+  const body = `
+    <div id="cat-profile-root" data-cat-id="${htmlEscape(cat.id)}" style="padding-top: 2rem;">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">›</span>
+          <a href="/cats.html">Meet the Cats</a>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">${htmlEscape(cat.name)}</span>
+        </nav>
+        <div class="cat-profile">
+          <div class="cat-gallery">
+${galleryHtml}
+          </div>
+          <div class="cat-details">
+            <span class="eyebrow">${htmlEscape(cat.breed)} · ${htmlEscape(cat.role)}</span>
+            <h1>${htmlEscape(cat.name)}</h1>
+            ${cat.registeredName ? `<p class="cat-details-registered">${htmlEscape(cat.registeredName)}</p>` : ''}
+            ${cat.tagline ? `<p class="cat-details-tagline">${htmlEscape(cat.tagline)}</p>` : ''}
+            <div class="cat-details-meta">
+              <span>${htmlEscape(cat.colour)}</span>
+              ${cat.registration ? `<span>${htmlEscape(cat.registration)}</span>` : ''}
+              ${cat.dob ? `<span>Born ${htmlEscape(cat.dob)}</span>` : ''}
+            </div>
+            ${siblingsHtml}
+            <div class="cat-details-section" spellcheck="false">
+              <h2>About ${htmlEscape(cat.name)}</h2>
+              ${personalityHtml}
+            </div>
+            <div class="cat-details-actions">
+              ${cat.studRegisterUrl ? `<a href="${htmlEscape(cat.studRegisterUrl)}" target="_blank" rel="noopener" class="btn btn-outline btn-small" style="margin-right: 0.5rem;">View on GCCF Stud Register ↗</a>` : ''}
+              ${cat.role === 'Stud' ? `<a href="/stud-services.html" class="btn btn-primary">Enquire about stud services</a>` : ''}
+            </div>
+          </div>
+        </div>
+        <div id="cat-testimonials-${htmlEscape(cat.id)}"></div>
+      </div>
+    </div>
+`;
+
+  // After DOM is ready, JS calls renderCatProfile which detects the
+  // data-cat-id attribute and re-renders to attach lightbox triggers,
+  // gallery aspect classes, related testimonials, and structured data.
+  const scriptInit = `document.addEventListener('DOMContentLoaded',function(){if(typeof renderCatProfile==='function'){renderCatProfile('cat-profile-root');}});`;
+
+  return pageShell({
+    title: titleStr,
+    description: descriptionStr,
+    canonicalUrl: url,
+    ogImage,
+    dataPage: 'cats',
+    body,
+    scriptInit
+  });
+}
+
+function renderLitterPage(litter) {
+  const url = `${SITE_URL}litters/${encodeURIComponent(litter.id)}.html`;
+  const coverPath = litter.coverImage || litter.thumbnail || 'images/logo.png';
+  const ogImage = coverPath.startsWith('http') ? coverPath : `${SITE_URL}${coverPath}`;
+
+  const titleStr = `${litter.title} — ${litter.breed} ${litter.status === 'Past' ? 'litter' : 'litter (upcoming)'} — Little Paws By Miles`;
+  const descriptionStr = litter.summary || `${litter.title} at Little Paws By Miles. ${litter.dateLabel || ''}`.trim();
+
+  // Dam / sire as on the card
+  const dam = litter.dam ? cats.find(c => c.id === litter.dam) : null;
+  const damHtml = dam
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}.html">${htmlEscape(dam.name)}</a>`
+    : (litter.dam ? htmlEscape(litter.dam) : '');
+  let sireHtml = '';
+  if (litter.sire) {
+    const sire = cats.find(c => c.id === litter.sire);
+    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}.html">${htmlEscape(sire.name)}</a>`;
+  }
+  if (!sireHtml && litter.sireName) sireHtml = htmlEscape(litter.sireName);
+  const parentsBits = [];
+  if (damHtml)  parentsBits.push(`<span><strong>Dam:</strong> ${damHtml}</span>`);
+  if (sireHtml) parentsBits.push(`<span><strong>Sire:</strong> ${sireHtml}</span>`);
+  const parentsHtml = parentsBits.length ? `<div class="litter-parents">${parentsBits.join('')}</div>` : '';
+
+  // Cover (uses coverImage if provided, else thumbnail)
+  const coverHtml = coverPath
+    ? `<img src="/${htmlEscape(coverPath)}" alt="${htmlEscape(litter.title)}" loading="lazy">`
+    : `<span class="litter-thumb-placeholder">${htmlEscape(((dam && dam.name) || litter.title || 'L').charAt(0).toUpperCase())}</span>`;
+
+  const galleryPhotos = (litter.photos || []).filter(p => p && p.length);
+  const galleryHtml = galleryPhotos.length
+    ? `<div class="litter-gallery">${galleryPhotos.map(p => `<div class="litter-gallery-item"><img src="/${htmlEscape(p)}" alt="${htmlEscape(litter.title)}" loading="lazy"></div>`).join('')}</div>`
+    : '';
+
+  const bodyHtml = renderMarkdownish(litter.body);
+
+  const waitlistCta = litter.status === 'Upcoming'
+    ? `<a href="/contact.html" class="btn btn-primary">Join the waitlist</a>`
+    : '';
+
+  const body = `
+    <div id="litter-profile-root" data-litter-id="${htmlEscape(litter.id)}" style="padding-top: 2rem;">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">›</span>
+          <a href="/litters.html">Litters</a>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">${htmlEscape(litter.title)}</span>
+        </nav>
+        <article class="litter-profile">
+          <header class="litter-profile-header">
+            <span class="eyebrow">${htmlEscape(litter.status)} · ${htmlEscape(litter.breed)}</span>
+            <h1>${htmlEscape(litter.title)}</h1>
+            ${litter.dateLabel ? `<p class="litter-date">${htmlEscape(litter.dateLabel)}${litter.kittenCount ? ' · ' + htmlEscape(litter.kittenCount) : ''}</p>` : ''}
+            ${parentsHtml}
+          </header>
+          <div class="litter-profile-cover">${coverHtml}</div>
+          ${litter.summary ? `<p class="litter-summary litter-summary--lead">${htmlEscape(litter.summary)}</p>` : ''}
+          <div class="litter-profile-body" spellcheck="false">${bodyHtml}</div>
+          ${galleryHtml}
+          ${waitlistCta ? `<div class="litter-profile-cta">${waitlistCta}</div>` : ''}
+        </article>
+      </div>
+    </div>
+`;
+
+  const scriptInit = `document.addEventListener('DOMContentLoaded',function(){if(typeof renderLitterProfile==='function'){renderLitterProfile('litter-profile-root');}});`;
+
+  return pageShell({
+    title: titleStr,
+    description: descriptionStr,
+    canonicalUrl: url,
+    ogImage,
+    dataPage: 'litters',
+    body,
+    scriptInit
+  });
+}
+
+// Emit the files
+const CATS_DIR = path.join(ROOT, 'cats');
+const LITTERS_DIR = path.join(ROOT, 'litters');
+if (!fs.existsSync(CATS_DIR)) fs.mkdirSync(CATS_DIR, { recursive: true });
+if (!fs.existsSync(LITTERS_DIR)) fs.mkdirSync(LITTERS_DIR, { recursive: true });
+
+cats.forEach(cat => {
+  const html = renderCatPage(cat);
+  fs.writeFileSync(path.join(CATS_DIR, `${cat.id}.html`), html);
+});
+console.log(`✓ Wrote ${cats.length} per-cat pages to cats/`);
+
+litters.forEach(litter => {
+  const html = renderLitterPage(litter);
+  fs.writeFileSync(path.join(LITTERS_DIR, `${litter.id}.html`), html);
+});
+console.log(`✓ Wrote ${litters.length} per-litter pages to litters/`);
+
+
 // ---------- Minification (production builds only) ----------
 // Cloudflare Pages sets CF_PAGES=1 during its build. We only minify in
 // that environment so local builds leave the source files readable for

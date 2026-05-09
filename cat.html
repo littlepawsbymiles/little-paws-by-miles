@@ -2,58 +2,26 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Primary SEO -->
-  <title>Cat Profile | Little Paws By Miles</title>
-  <meta name="description" content="One of our much-loved cats at Little Paws By Miles, a small, heart-led UK breeder of Ragdoll, Maine Coon and British Shorthair kittens.">
-  <meta name="keywords" content="cat profile, Ragdoll cat, Maine Coon cat, British Shorthair cat, Little Paws By Miles">
-  <meta name="author" content="Little Paws By Miles">
-  <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="canonical" href="https://littlepawsbymiles.co.uk/cat.html">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Little Paws By Miles">
-  <meta property="og:title" content="Cat Profile | Little Paws By Miles">
-  <meta property="og:description" content="One of our much-loved cats at Little Paws By Miles, a small, heart-led UK breeder of Ragdoll, Maine Coon and British Shorthair kittens.">
-  <meta property="og:url" content="https://littlepawsbymiles.co.uk/cat.html">
-  <meta property="og:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
-  <meta property="og:locale" content="en_GB">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Cat Profile | Little Paws By Miles">
-  <meta name="twitter:description" content="One of our much-loved cats at Little Paws By Miles, a small, heart-led UK breeder of Ragdoll, Maine Coon and British Shorthair kittens.">
-  <meta name="twitter:image" content="https://littlepawsbymiles.co.uk/images/logo.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-  <link rel="apple-touch-icon" href="images/logo.png">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body data-page="cats">
-  <div id="site-header-placeholder"></div>
-
-  <main>
-    <div id="cat-profile-root" style="padding-top: 2rem;"></div>
-  </main>
-
-  <div id="site-footer-placeholder"></div>
-
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/partials.js"></script>
+  <title>Redirecting… | Little Paws By Miles</title>
+  <!-- Per-cat content is now served from /cats/<id>.html (real HTML
+       files for SEO and faster first paint). This page just redirects
+       legacy /cat.html?id=X URLs through to the new canonical URL. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://littlepawsbymiles.co.uk/cats.html">
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCatProfile('cat-profile-root');
-    });
+    (function () {
+      var p = new URLSearchParams(window.location.search);
+      var id = p.get('id');
+      if (id) {
+        location.replace('/cats/' + encodeURIComponent(id) + '.html');
+      } else {
+        location.replace('/cats.html');
+      }
+    })();
   </script>
+  <meta http-equiv="refresh" content="0; url=/cats.html">
+</head>
+<body>
+  <p>Cat profile pages have moved. <a href="/cats.html">Click here if you are not redirected automatically</a>.</p>
 </body>
 </html>

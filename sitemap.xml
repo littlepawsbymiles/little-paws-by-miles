@@ -67,55 +67,55 @@
 
   <!-- Individual cat profiles -->
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=bella</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/bella.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=cookie</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/cookie.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=dottie</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/dottie.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=ralphy</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/ralphy.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=bobbie</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/bobbie.html</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=billie</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/billie.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=tilly</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/tilly.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=starsky</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/starsky.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/cat.html?id=annie</loc>
+    <loc>https://littlepawsbymiles.co.uk/cats/annie.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -123,19 +123,19 @@
 
   <!-- Individual litter pages -->
   <url>
-    <loc>https://littlepawsbymiles.co.uk/litter.html?id=bellas-litter-november</loc>
+    <loc>https://littlepawsbymiles.co.uk/litters/bellas-litter-november.html</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/litter.html?id=cookies-litter-may</loc>
+    <loc>https://littlepawsbymiles.co.uk/litters/cookies-litter-may.html</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://littlepawsbymiles.co.uk/litter.html?id=dotties-upcoming-litter</loc>
+    <loc>https://littlepawsbymiles.co.uk/litters/dotties-upcoming-litter.html</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
