@@ -90,6 +90,22 @@ function readCollection(dir) {
 // ---------- Load content ----------
 console.log('Building js/data.js from content/…');
 
+// Make image paths root-relative so they resolve correctly from any
+// page depth. The pre-rendered subfolder pages (e.g. /cats/bella.html
+// or /litters/dotties-litter-may.html) and the runtime JS hydration
+// both use these paths verbatim, so they need to start with `/` or be
+// absolute URLs. Anything that's already absolute (http://, https://)
+// or already root-relative is left alone.
+function rootRel(p) {
+  if (!p || typeof p !== 'string') return p;
+  if (/^(https?:)?\/\//.test(p)) return p;
+  if (p.startsWith('/')) return p;
+  return '/' + p;
+}
+function rootRelArray(arr) {
+  return Array.isArray(arr) ? arr.map(rootRel) : arr;
+}
+
 const cats = readCollection(path.join(CONTENT, 'cats')).map(c => ({
   id: c.id || c._file.replace(/\.md$/, ''),
   name: c.name || '',
@@ -104,8 +120,8 @@ const cats = readCollection(path.join(CONTENT, 'cats')).map(c => ({
   personality: c._body || '',
   siblings: Array.isArray(c.siblings) ? c.siblings : [],
   // Optional explicit card image. Falls back to photos[0] in the renderer.
-  cardImage: c.cardImage || '',
-  photos: Array.isArray(c.photos) ? c.photos : []
+  cardImage: rootRel(c.cardImage || ''),
+  photos: rootRelArray(Array.isArray(c.photos) ? c.photos : [])
 }));
 
 const kittens = readCollection(path.join(CONTENT, 'kittens'))
@@ -126,11 +142,13 @@ const kittens = readCollection(path.join(CONTENT, 'kittens'))
     sireName: k.sireName || '',
     litterId: k.litterId || '',
     // Optional explicit card image. Falls back to photos[0] in the renderer.
-    cardImage: k.cardImage || '',
+    cardImage: rootRel(k.cardImage || ''),
     // photos: array preferred. Falls back to legacy single `photo` field.
-    photos: Array.isArray(k.photos) && k.photos.length
-      ? k.photos
-      : (k.photo ? [k.photo] : []),
+    photos: rootRelArray(
+      Array.isArray(k.photos) && k.photos.length
+        ? k.photos
+        : (k.photo ? [k.photo] : [])
+    ),
     notes: k._body || ''
   }));
 
@@ -148,10 +166,10 @@ const litters = readCollection(path.join(CONTENT, 'litters')).map(l => ({
   // thumbnail = small image used on the litters list cards.
   // coverImage = larger hero image at the top of the detail page.
   // If coverImage is omitted the detail page falls back to thumbnail.
-  thumbnail: l.thumbnail || '',
-  coverImage: l.coverImage || '',
+  thumbnail: rootRel(l.thumbnail || ''),
+  coverImage: rootRel(l.coverImage || ''),
   // Optional gallery for the per-litter detail page (litter.html?id=...)
-  photos: Array.isArray(l.photos) ? l.photos : [],
+  photos: rootRelArray(Array.isArray(l.photos) ? l.photos : []),
   body: l._body || ''
 }));
 
@@ -246,6 +264,26 @@ function htmlEscape(s) {
     .replace(/'/g, '&#39;');
 }
 
+// Build an absolute URL for og:image style fields. Handles already-absolute
+// URLs, root-relative paths (now the default after rootRel normalisation
+// in the data step) and bare paths.
+function absoluteUrl(p) {
+  if (!p) return '';
+  if (/^https?:\/\//.test(p)) return p;
+  const base = SITE_URL.replace(/\/$/, '');
+  return base + (p.startsWith('/') ? p : '/' + p);
+}
+
+// Trim a meta description to the recommended length (~155 chars).
+// Cuts at the last word boundary before the limit and adds an ellipsis.
+function trimDescription(s, max) {
+  max = max || 155;
+  if (!s || s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trim() + '…';
+}
+
 // Mirror of renderCatPersonality in main.js — handles ## headings,
 // bullet lists, and paragraphs. Used to render cat bio + litter body.
 function renderMarkdownish(raw) {
@@ -312,13 +350,15 @@ ${body}
 
 function renderCatPage(cat) {
   const url = `${SITE_URL}cats/${encodeURIComponent(cat.id)}.html`;
-  const cover = cat.cardImage || (cat.photos && cat.photos[0]) || 'images/logo.png';
-  const ogImage = cover.startsWith('http') ? cover : `${SITE_URL}${cover}`;
+  const cover = cat.cardImage || (cat.photos && cat.photos[0]) || '/images/logo.png';
+  const ogImage = absoluteUrl(cover);
 
   const titleStr = `${cat.name} — ${cat.breed} ${cat.role} — Little Paws By Miles`;
-  const descriptionStr = cat.tagline
-    ? `${cat.name} — ${cat.colour} ${cat.breed} ${cat.role.toLowerCase()} at Little Paws By Miles. ${cat.tagline}`
-    : `Meet ${cat.name}, our ${cat.colour} ${cat.breed} ${cat.role.toLowerCase()} at Little Paws By Miles.`;
+  // Description capped at 155 chars to satisfy SEO recommendations
+  // (Ahrefs flags anything longer). Tagline appended only if it fits.
+  const descBase = `Meet ${cat.name}, our ${cat.colour} ${cat.breed} ${cat.role.toLowerCase()} at Little Paws By Miles.`;
+  const descWithTagline = cat.tagline ? `${descBase} ${cat.tagline}` : descBase;
+  const descriptionStr = trimDescription(descWithTagline, 155);
 
   const personalityHtml = renderMarkdownish(cat.personality);
 
@@ -340,7 +380,7 @@ function renderCatPage(cat) {
         `<div class="cat-gallery-item placeholder">${htmlEscape((cat.name || '?').charAt(0).toUpperCase())}</div>`
       ).join('')
     : photos.map(p =>
-        `<div class="cat-gallery-item"><img src="/${htmlEscape(p)}" alt="${htmlEscape(cat.name + ', ' + cat.colour + ' ' + cat.breed)}" loading="lazy"></div>`
+        `<div class="cat-gallery-item"><img src="${htmlEscape(p)}" alt="${htmlEscape(cat.name + ', ' + cat.colour + ' ' + cat.breed)}" loading="lazy"></div>`
       ).join('');
 
   const body = `
@@ -401,11 +441,12 @@ ${galleryHtml}
 
 function renderLitterPage(litter) {
   const url = `${SITE_URL}litters/${encodeURIComponent(litter.id)}.html`;
-  const coverPath = litter.coverImage || litter.thumbnail || 'images/logo.png';
-  const ogImage = coverPath.startsWith('http') ? coverPath : `${SITE_URL}${coverPath}`;
+  const coverPath = litter.coverImage || litter.thumbnail || '/images/logo.png';
+  const ogImage = absoluteUrl(coverPath);
 
   const titleStr = `${litter.title} — ${litter.breed} ${litter.status === 'Past' ? 'litter' : 'litter (upcoming)'} — Little Paws By Miles`;
-  const descriptionStr = litter.summary || `${litter.title} at Little Paws By Miles. ${litter.dateLabel || ''}`.trim();
+  const descRaw = litter.summary || `${litter.title} at Little Paws By Miles. ${litter.dateLabel || ''}`.trim();
+  const descriptionStr = trimDescription(descRaw, 155);
 
   // Dam / sire as on the card
   const dam = litter.dam ? cats.find(c => c.id === litter.dam) : null;
@@ -430,7 +471,7 @@ function renderLitterPage(litter) {
 
   const galleryPhotos = (litter.photos || []).filter(p => p && p.length);
   const galleryHtml = galleryPhotos.length
-    ? `<div class="litter-gallery">${galleryPhotos.map(p => `<div class="litter-gallery-item"><img src="/${htmlEscape(p)}" alt="${htmlEscape(litter.title)}" loading="lazy"></div>`).join('')}</div>`
+    ? `<div class="litter-gallery">${galleryPhotos.map(p => `<div class="litter-gallery-item"><img src="${htmlEscape(p)}" alt="${htmlEscape(litter.title)}" loading="lazy"></div>`).join('')}</div>`
     : '';
 
   const bodyHtml = renderMarkdownish(litter.body);
