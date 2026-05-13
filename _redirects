@@ -1,0 +1,8 @@
+# Cloudflare Pages redirect rules.
+# Format:   <source>   <destination>   <status>
+# Status:   301 permanent, 302 temporary.
+
+# The two unregistered-dam litters were removed from the site for GCCF
+# compliance. Forward any external links to the main litters page.
+/litters/cookies-litter-may  /litters  301
+/litters/dotties-litter-may  /litters  301
