@@ -12,8 +12,6 @@ siblings:
 photos:
   - images/cats/dottie/dottie-001.webp
   - images/cats/dottie/dottie-002.webp
-  - images/cats/dottie/dottie-003.webp
-  - images/cats/dottie/dottie-004.webp
   - images/cats/dottie/dottie-005.webp
 ---
 

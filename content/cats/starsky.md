@@ -12,7 +12,6 @@ tagline: GCCF & TICA Blue Silver Mackerel Tabby. Officially listed on the GCCF S
 siblings: []
 photos:
   - images/cats/starsky/starsky-001.webp
-  - images/cats/starsky/starsky-002.webp
   - images/cats/starsky/starsky-003.webp
   - images/cats/starsky/starsky-004.webp
 ---

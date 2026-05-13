@@ -13,7 +13,6 @@ photos:
   - images/cats/tilly/tilly-001.webp
   - images/cats/tilly/tilly-002.webp
   - images/cats/tilly/tilly-003.webp
-  - images/cats/tilly/tilly-004.webp
   - images/cats/tilly/tilly-005.webp
 ---
 

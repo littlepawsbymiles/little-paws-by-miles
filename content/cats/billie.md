@@ -13,7 +13,6 @@ photos:
   - images/cats/billie/billie-1.webp
   - images/cats/billie/billie-2.webp
   - images/cats/billie/billie-3.webp
-  - images/cats/billie/billie-4.webp
   - images/cats/billie/billie-5.webp
   - images/cats/billie/billie-6.webp
 ---
