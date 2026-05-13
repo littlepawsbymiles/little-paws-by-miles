@@ -154,7 +154,7 @@ function renderCatCard(cat) {
   const tagline = cat.tagline ? `<p class="cat-card-tagline">${escapeHtml(cat.tagline)}</p>` : '';
 
   return `
-    <a href="/cats/${encodeURIComponent(cat.id)}.html" class="cat-card fade-in">
+    <a href="/cats/${encodeURIComponent(cat.id)}" class="cat-card fade-in">
       ${hasPhoto ? `<div class="cat-card-image">${img}</div>` : img}
       <div class="cat-card-body">
         <span class="cat-card-breed">${escapeHtml(cat.breed)}</span>
@@ -188,7 +188,7 @@ function renderCatProfile(targetId) {
       <div class="container container-narrow" style="padding: 4rem 1.5rem; text-align: center;">
         <h1>Cat not found</h1>
         <p>We couldn't find that cat. Please head back to the cats page.</p>
-        <a href="/cats.html" class="btn btn-primary mt-1">Meet the Cats</a>
+        <a href="/cats" class="btn btn-primary mt-1">Meet the Cats</a>
       </div>
     `;
     document.title = 'Cat not found — Little Paws By Miles';
@@ -208,12 +208,12 @@ function renderCatProfile(targetId) {
   const businessUrl = (typeof BUSINESS !== 'undefined' && BUSINESS.url) ? BUSINESS.url : '';
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical && businessUrl) {
-    canonical.setAttribute('href', `${businessUrl}/cats/${encodeURIComponent(cat.id)}.html`);
+    canonical.setAttribute('href', `${businessUrl}/cats/${encodeURIComponent(cat.id)}`);
   }
   setOgTags({
     title: `${cat.name} — ${cat.breed} ${cat.role}`,
     description: cat.tagline || `Meet ${cat.name}, our ${cat.colour} ${cat.breed}.`,
-    url: businessUrl ? `${businessUrl}/cats/${encodeURIComponent(cat.id)}.html` : ''
+    url: businessUrl ? `${businessUrl}/cats/${encodeURIComponent(cat.id)}` : ''
   });
 
   const photos = (cat.photos || []).filter(p => p && p.length);
@@ -237,7 +237,7 @@ function renderCatProfile(targetId) {
         const links = cat.siblings
           .map(sid => CATS.find(c => c.id === sid))
           .filter(Boolean)
-          .map(s => `<a href="/cats/${encodeURIComponent(s.id)}.html">${escapeHtml(s.name)}</a>`)
+          .map(s => `<a href="/cats/${encodeURIComponent(s.id)}">${escapeHtml(s.name)}</a>`)
           .join(', ');
         if (!links) return '';
         const label = cat.siblings.length === 1 ? 'Sister to' : 'Sisters to';
@@ -266,9 +266,9 @@ function renderCatProfile(targetId) {
   target.innerHTML = `
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb">
-        <a href="index.html">Home</a>
+        <a href="/">Home</a>
         <span aria-hidden="true">›</span>
-        <a href="cats.html">Meet the Cats</a>
+        <a href="/cats">Meet the Cats</a>
         <span aria-hidden="true">›</span>
         <span aria-current="page">${escapeHtml(cat.name)}</span>
       </nav>
@@ -294,7 +294,7 @@ function renderCatProfile(targetId) {
           <div class="cat-details-actions">
             ${studRegisterBtnHtml}
             ${cat.role === 'Stud' ? `
-              <a href="stud-services.html" class="btn btn-primary">Enquire about stud services</a>
+              <a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>
             ` : ''}
           </div>
         </div>
@@ -425,7 +425,7 @@ function injectCatStructuredData(cat, businessUrl) {
   // Remove any previously injected per-cat schema
   document.querySelectorAll('script[data-cat-schema]').forEach(s => s.remove());
 
-  const pageUrl = businessUrl ? `${businessUrl}/cats/${encodeURIComponent(cat.id)}.html` : '';
+  const pageUrl = businessUrl ? `${businessUrl}/cats/${encodeURIComponent(cat.id)}` : '';
   const catSchema = {
     "@context": "https://schema.org",
     "@type": "Thing",
@@ -440,7 +440,7 @@ function injectCatStructuredData(cat, businessUrl) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": businessUrl || undefined },
-      { "@type": "ListItem", "position": 2, "name": "Meet the Cats", "item": businessUrl ? `${businessUrl}cats.html` : undefined },
+      { "@type": "ListItem", "position": 2, "name": "Meet the Cats", "item": businessUrl ? `${businessUrl}cats` : undefined },
       { "@type": "ListItem", "position": 3, "name": cat.name, "item": pageUrl || undefined }
     ]
   };
@@ -502,18 +502,18 @@ function renderKittenCard(kitten) {
   const isAvailable = statusLower === 'available';
   const enquiryLink = (typeof FORMS !== 'undefined' && FORMS.kittenEnquiry)
     ? FORMS.kittenEnquiry
-    : 'contact.html';
+    : '/contact';
 
   // Parents: dam (always a cat lookup) and sire (cat lookup or free text fallback)
   const dam = (typeof CATS !== 'undefined' && kitten.dam)
     ? CATS.find(c => c.id === kitten.dam) : null;
   const damHtml = dam
-    ? `<a href="/cats/${encodeURIComponent(dam.id)}.html">${escapeHtml(dam.name)}</a>`
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}">${escapeHtml(dam.name)}</a>`
     : '';
   let sireHtml = '';
   if (kitten.sireId && typeof CATS !== 'undefined') {
     const sire = CATS.find(c => c.id === kitten.sireId);
-    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}.html">${escapeHtml(sire.name)}</a>`;
+    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}">${escapeHtml(sire.name)}</a>`;
   }
   if (!sireHtml && kitten.sireName) sireHtml = escapeHtml(kitten.sireName);
 
@@ -529,7 +529,7 @@ function renderKittenCard(kitten) {
   if (kitten.litterId && typeof LITTERS !== 'undefined') {
     const litter = LITTERS.find(l => l.id === kitten.litterId);
     if (litter) {
-      litterHtml = `<a class="kitten-litter-link" href="/litters/${encodeURIComponent(litter.id)}.html">From ${escapeHtml(litter.title)} →</a>`;
+      litterHtml = `<a class="kitten-litter-link" href="/litters/${encodeURIComponent(litter.id)}">From ${escapeHtml(litter.title)} →</a>`;
     }
   }
 
@@ -612,14 +612,14 @@ function renderLitters(targetId, statusFilter) {
    The card teases the litter and links through to litter.html?id=... */
 function renderLitterCard(litter) {
   const hasThumbnail = litter.thumbnail && litter.thumbnail.length;
-  const detailUrl = `/litters/${encodeURIComponent(litter.id)}.html`;
+  const detailUrl = `/litters/${encodeURIComponent(litter.id)}`;
 
   // Dam — if it matches a cat id, make it a link; otherwise show as text
   const dam = (typeof CATS !== 'undefined' && litter.dam)
     ? CATS.find(c => c.id === litter.dam)
     : null;
   const damHtml = dam
-    ? `<a href="/cats/${encodeURIComponent(dam.id)}.html">${escapeHtml(dam.name)}</a>`
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}">${escapeHtml(dam.name)}</a>`
     : (litter.dam ? escapeHtml(litter.dam) : '');
 
   // Sire — prefer internal cat link if sire id is set, else use sireName free text
@@ -627,7 +627,7 @@ function renderLitterCard(litter) {
   if (litter.sire && typeof CATS !== 'undefined') {
     const sire = CATS.find(c => c.id === litter.sire);
     if (sire) {
-      sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}.html">${escapeHtml(sire.name)}</a>`;
+      sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}">${escapeHtml(sire.name)}</a>`;
     }
   }
   if (!sireHtml && litter.sireName) sireHtml = escapeHtml(litter.sireName);
@@ -650,7 +650,7 @@ function renderLitterCard(litter) {
   // Waitlist CTA shows only for upcoming litters
   const waitlistLink = (typeof FORMS !== 'undefined' && FORMS.waitlist)
     ? FORMS.waitlist
-    : 'contact.html';
+    : '/contact';
   const waitlistCta = litter.status === 'Upcoming'
     ? `<a href="${escapeHtml(waitlistLink)}" class="btn btn-primary btn-small" ${waitlistLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Join the waitlist</a>`
     : '';
@@ -698,7 +698,7 @@ function renderLitterProfile(targetId) {
       <div class="container container-narrow" style="padding: 4rem 1.5rem; text-align: center;">
         <h1>Litter not found</h1>
         <p>We couldn't find that litter. Head back to the litters page for a full list.</p>
-        <a href="litters.html" class="btn btn-primary mt-1">All litters</a>
+        <a href="/litters" class="btn btn-primary mt-1">All litters</a>
       </div>
     `;
     document.title = 'Litter not found — Little Paws By Miles';
@@ -717,12 +717,12 @@ function renderLitterProfile(targetId) {
   const businessUrl = (typeof BUSINESS !== 'undefined' && BUSINESS.url) ? BUSINESS.url : '';
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical && businessUrl) {
-    canonical.setAttribute('href', `${businessUrl}/litters/${encodeURIComponent(litter.id)}.html`);
+    canonical.setAttribute('href', `${businessUrl}/litters/${encodeURIComponent(litter.id)}`);
   }
   setOgTags({
     title: `${litter.title} — ${litter.breed}`,
     description: litter.summary || `${litter.title} at Little Paws By Miles.`,
-    url: businessUrl ? `${businessUrl}/litters/${encodeURIComponent(litter.id)}.html` : '',
+    url: businessUrl ? `${businessUrl}/litters/${encodeURIComponent(litter.id)}` : '',
     image: litter.thumbnail && businessUrl ? `${businessUrl}${litter.thumbnail}` : ''
   });
 
@@ -730,12 +730,12 @@ function renderLitterProfile(targetId) {
   const dam = (typeof CATS !== 'undefined' && litter.dam)
     ? CATS.find(c => c.id === litter.dam) : null;
   const damHtml = dam
-    ? `<a href="/cats/${encodeURIComponent(dam.id)}.html">${escapeHtml(dam.name)}</a>`
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}">${escapeHtml(dam.name)}</a>`
     : (litter.dam ? escapeHtml(litter.dam) : '');
   let sireHtml = '';
   if (litter.sire && typeof CATS !== 'undefined') {
     const sire = CATS.find(c => c.id === litter.sire);
-    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}.html">${escapeHtml(sire.name)}</a>`;
+    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}">${escapeHtml(sire.name)}</a>`;
   }
   if (!sireHtml && litter.sireName) sireHtml = escapeHtml(litter.sireName);
   const parentsBits = [];
@@ -769,7 +769,7 @@ function renderLitterProfile(targetId) {
 
   const waitlistLink = (typeof FORMS !== 'undefined' && FORMS.waitlist)
     ? FORMS.waitlist
-    : 'contact.html';
+    : '/contact';
   const waitlistCta = litter.status === 'Upcoming'
     ? `<a href="${escapeHtml(waitlistLink)}" class="btn btn-primary" ${waitlistLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>Join the waitlist</a>`
     : '';
@@ -777,9 +777,9 @@ function renderLitterProfile(targetId) {
   target.innerHTML = `
     <div class="container">
       <nav aria-label="Breadcrumb" class="breadcrumb">
-        <a href="index.html">Home</a>
+        <a href="/">Home</a>
         <span aria-hidden="true">›</span>
-        <a href="litters.html">Litters</a>
+        <a href="/litters">Litters</a>
         <span aria-hidden="true">›</span>
         <span aria-current="page">${escapeHtml(litter.title)}</span>
       </nav>
@@ -816,13 +816,13 @@ function renderLitterProfile(targetId) {
 function injectLitterStructuredData(litter, businessUrl) {
   document.querySelectorAll('script[data-litter-schema]').forEach(s => s.remove());
 
-  const pageUrl = businessUrl ? `${businessUrl}/litters/${encodeURIComponent(litter.id)}.html` : '';
+  const pageUrl = businessUrl ? `${businessUrl}/litters/${encodeURIComponent(litter.id)}` : '';
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": businessUrl || undefined },
-      { "@type": "ListItem", "position": 2, "name": "Litters", "item": businessUrl ? `${businessUrl}litters.html` : undefined },
+      { "@type": "ListItem", "position": 2, "name": "Litters", "item": businessUrl ? `${businessUrl}litters` : undefined },
       { "@type": "ListItem", "position": 3, "name": litter.title, "item": pageUrl || undefined }
     ]
   };
@@ -867,7 +867,7 @@ function renderTestimonialCard(t, opts) {
     const cat = CATS.find(c => c.id === t.relatedCat);
     if (cat) {
       relatedCatHtml = `
-        <a class="testimonial-related" href="/cats/${encodeURIComponent(cat.id)}.html">
+        <a class="testimonial-related" href="/cats/${encodeURIComponent(cat.id)}">
           About ${escapeHtml(cat.name)} →
         </a>`;
     }
@@ -1067,7 +1067,7 @@ function renderStuds(targetId) {
           <p style="color: var(--grey); margin-bottom: 0.5rem;">${escapeHtml(stud.colour)}</p>
           <div class="stud-personality">${renderCatPersonality(stud.personality)}</div>
           ${stud.registration ? `<p style="font-size: 0.85rem; color: var(--grey);">${escapeHtml(stud.registration)}</p>` : ''}
-          <a href="/cats/${encodeURIComponent(stud.id)}.html" class="btn btn-outline btn-small mt-1">Full profile</a>
+          <a href="/cats/${encodeURIComponent(stud.id)}" class="btn btn-outline btn-small mt-1">Full profile</a>
         </div>
       </div>
     `;

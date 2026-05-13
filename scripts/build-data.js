@@ -349,7 +349,7 @@ ${body}
 }
 
 function renderCatPage(cat) {
-  const url = `${SITE_URL}cats/${encodeURIComponent(cat.id)}.html`;
+  const url = `${SITE_URL}cats/${encodeURIComponent(cat.id)}`;
   const cover = cat.cardImage || (cat.photos && cat.photos[0]) || '/images/logo.png';
   const ogImage = absoluteUrl(cover);
 
@@ -367,7 +367,7 @@ function renderCatPage(cat) {
     const links = cat.siblings
       .map(sid => cats.find(c => c.id === sid))
       .filter(Boolean)
-      .map(s => `<a href="/cats/${encodeURIComponent(s.id)}.html">${htmlEscape(s.name)}</a>`)
+      .map(s => `<a href="/cats/${encodeURIComponent(s.id)}">${htmlEscape(s.name)}</a>`)
       .join(', ');
     if (!links) return '';
     const label = cat.siblings.length === 1 ? 'Sister to' : 'Sisters to';
@@ -389,7 +389,7 @@ function renderCatPage(cat) {
         <nav aria-label="Breadcrumb" class="breadcrumb">
           <a href="/">Home</a>
           <span aria-hidden="true">›</span>
-          <a href="/cats.html">Meet the Cats</a>
+          <a href="/cats">Meet the Cats</a>
           <span aria-hidden="true">›</span>
           <span aria-current="page">${htmlEscape(cat.name)}</span>
         </nav>
@@ -414,7 +414,7 @@ ${galleryHtml}
             </div>
             <div class="cat-details-actions">
               ${cat.studRegisterUrl ? `<a href="${htmlEscape(cat.studRegisterUrl)}" target="_blank" rel="noopener" class="btn btn-outline btn-small" style="margin-right: 0.5rem;">View on GCCF Stud Register ↗</a>` : ''}
-              ${cat.role === 'Stud' ? `<a href="/stud-services.html" class="btn btn-primary">Enquire about stud services</a>` : ''}
+              ${cat.role === 'Stud' ? `<a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>` : ''}
             </div>
           </div>
         </div>
@@ -440,7 +440,7 @@ ${galleryHtml}
 }
 
 function renderLitterPage(litter) {
-  const url = `${SITE_URL}litters/${encodeURIComponent(litter.id)}.html`;
+  const url = `${SITE_URL}litters/${encodeURIComponent(litter.id)}`;
   const coverPath = litter.coverImage || litter.thumbnail || '/images/logo.png';
   const ogImage = absoluteUrl(coverPath);
 
@@ -451,12 +451,12 @@ function renderLitterPage(litter) {
   // Dam / sire as on the card
   const dam = litter.dam ? cats.find(c => c.id === litter.dam) : null;
   const damHtml = dam
-    ? `<a href="/cats/${encodeURIComponent(dam.id)}.html">${htmlEscape(dam.name)}</a>`
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}">${htmlEscape(dam.name)}</a>`
     : (litter.dam ? htmlEscape(litter.dam) : '');
   let sireHtml = '';
   if (litter.sire) {
     const sire = cats.find(c => c.id === litter.sire);
-    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}.html">${htmlEscape(sire.name)}</a>`;
+    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}">${htmlEscape(sire.name)}</a>`;
   }
   if (!sireHtml && litter.sireName) sireHtml = htmlEscape(litter.sireName);
   const parentsBits = [];
@@ -477,7 +477,7 @@ function renderLitterPage(litter) {
   const bodyHtml = renderMarkdownish(litter.body);
 
   const waitlistCta = litter.status === 'Upcoming'
-    ? `<a href="/contact.html" class="btn btn-primary">Join the waitlist</a>`
+    ? `<a href="/contact" class="btn btn-primary">Join the waitlist</a>`
     : '';
 
   const body = `
@@ -486,7 +486,7 @@ function renderLitterPage(litter) {
         <nav aria-label="Breadcrumb" class="breadcrumb">
           <a href="/">Home</a>
           <span aria-hidden="true">›</span>
-          <a href="/litters.html">Litters</a>
+          <a href="/litters">Litters</a>
           <span aria-hidden="true">›</span>
           <span aria-current="page">${htmlEscape(litter.title)}</span>
         </nav>

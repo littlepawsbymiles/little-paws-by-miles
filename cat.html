@@ -7,21 +7,21 @@
        files for SEO and faster first paint). This page just redirects
        legacy /cat.html?id=X URLs through to the new canonical URL. -->
   <meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://littlepawsbymiles.co.uk/cats.html">
+  <link rel="canonical" href="https://littlepawsbymiles.co.uk/cats">
   <script>
     (function () {
       var p = new URLSearchParams(window.location.search);
       var id = p.get('id');
       if (id) {
-        location.replace('/cats/' + encodeURIComponent(id) + '.html');
+        location.replace('/cats/' + encodeURIComponent(id));
       } else {
-        location.replace('/cats.html');
+        location.replace('/cats');
       }
     })();
   </script>
-  <meta http-equiv="refresh" content="0; url=/cats.html">
+  <meta http-equiv="refresh" content="0; url=/cats">
 </head>
 <body>
-  <p>Cat profile pages have moved. <a href="/cats.html">Click here if you are not redirected automatically</a>.</p>
+  <p>Cat profile pages have moved. <a href="/cats">Click here if you are not redirected automatically</a>.</p>
 </body>
 </html>

@@ -8,21 +8,21 @@
        redirects legacy /litter.html?id=X URLs through to the new
        canonical URL. -->
   <meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://littlepawsbymiles.co.uk/litters.html">
+  <link rel="canonical" href="https://littlepawsbymiles.co.uk/litters">
   <script>
     (function () {
       var p = new URLSearchParams(window.location.search);
       var id = p.get('id');
       if (id) {
-        location.replace('/litters/' + encodeURIComponent(id) + '.html');
+        location.replace('/litters/' + encodeURIComponent(id));
       } else {
-        location.replace('/litters.html');
+        location.replace('/litters');
       }
     })();
   </script>
-  <meta http-equiv="refresh" content="0; url=/litters.html">
+  <meta http-equiv="refresh" content="0; url=/litters">
 </head>
 <body>
-  <p>Litter pages have moved. <a href="/litters.html">Click here if you are not redirected automatically</a>.</p>
+  <p>Litter pages have moved. <a href="/litters">Click here if you are not redirected automatically</a>.</p>
 </body>
 </html>
