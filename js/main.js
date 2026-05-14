@@ -277,25 +277,29 @@ function renderCatProfile(targetId) {
           ${galleryHtml}
         </div>
         <div class="cat-details">
-          <span class="eyebrow">${escapeHtml(cat.breed)} · ${escapeHtml(cat.role)}</span>
-          <h1>${escapeHtml(cat.name)}</h1>
-          ${registeredNameHtml}
-          ${taglineHtml}
-          <div class="cat-details-meta">
-            <span>${escapeHtml(cat.colour)}</span>
-            ${cat.registration ? `<span>${escapeHtml(cat.registration)}</span>` : ''}
-            ${dobHtml}
+          <div class="cat-details-header">
+            <span class="eyebrow">${escapeHtml(cat.breed)} · ${escapeHtml(cat.role)}</span>
+            <h1>${escapeHtml(cat.name)}</h1>
+            ${registeredNameHtml}
+            ${taglineHtml}
+            <div class="cat-details-meta">
+              <span>${escapeHtml(cat.colour)}</span>
+              ${cat.registration ? `<span>${escapeHtml(cat.registration)}</span>` : ''}
+              ${dobHtml}
+            </div>
+            ${siblingHtml}
           </div>
-          ${siblingHtml}
-          <div class="cat-details-section" spellcheck="false">
-            <h2>About ${escapeHtml(cat.name)}</h2>
-            ${paragraphs}
-          </div>
-          <div class="cat-details-actions">
-            ${studRegisterBtnHtml}
-            ${cat.role === 'Stud' ? `
-              <a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>
-            ` : ''}
+          <div class="cat-details-body">
+            <div class="cat-details-section" spellcheck="false">
+              <h2>About ${escapeHtml(cat.name)}</h2>
+              ${paragraphs}
+            </div>
+            <div class="cat-details-actions">
+              ${studRegisterBtnHtml}
+              ${cat.role === 'Stud' ? `
+                <a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>
+              ` : ''}
+            </div>
           </div>
         </div>
       </div>

@@ -2367,29 +2367,73 @@ a.litter-thumb img {
   grid-column: span 2;
 }
 
-/* Mobile fallback — single-column stack with aspect-ratio per item.
-   Row spans are meaningless here so we revert to natural sizing. */
-@media (max-width: 500px) {
+/* The cat-details header/body wrappers are layout-only. Transparent
+   by default (display: contents) so the desktop profile stacks
+   exactly as before — they only become real grid items on phones,
+   where `order` slots the photo carousel between them. */
+.cat-details-header,
+.cat-details-body {
+  display: contents;
+}
+
+/* Mobile (phones) — galleries become a horizontal swipe carousel.
+   The masonry grid stacks every photo full-width on a narrow screen,
+   which buries the bio under a tall column of images. A scroll-snap
+   carousel keeps the photos in one swipeable row instead. Pure CSS,
+   native swipe, no JS. Each photo stays a discrete element so the
+   lightbox slideshow still works on tap. */
+@media (max-width: 600px) {
   .cat-gallery,
   .litter-gallery {
-    grid-template-columns: 1fr;
+    display: flex;
+    grid-template-columns: none;
     grid-auto-rows: auto;
     grid-auto-flow: row;
+    gap: 0.6rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;            /* Firefox */
+    padding-bottom: 0.25rem;
   }
+  .cat-gallery::-webkit-scrollbar,
+  .litter-gallery::-webkit-scrollbar {
+    display: none;                    /* Chrome / Safari */
+  }
+  /* Each item ~80% of the viewport so the next photo peeks into view,
+     signalling "swipe for more". Aspect unified to 4:3 so heights
+     don't jump between portrait / landscape / square as you swipe —
+     the lightbox still shows the full uncropped photo on tap. */
   .cat-gallery-item,
-  .litter-gallery-item {
-    grid-row: auto;
-    grid-column: auto;
-    aspect-ratio: 1 / 1;
-  }
+  .litter-gallery-item,
+  .cat-gallery-item.gallery-item--square,
+  .litter-gallery-item.gallery-item--square,
   .cat-gallery-item.gallery-item--portrait,
-  .litter-gallery-item.gallery-item--portrait {
-    aspect-ratio: 3 / 4;
-  }
+  .litter-gallery-item.gallery-item--portrait,
   .cat-gallery-item.gallery-item--landscape,
   .litter-gallery-item.gallery-item--landscape {
+    flex: 0 0 80%;
+    grid-row: auto;
+    grid-column: auto;
     aspect-ratio: 4 / 3;
+    scroll-snap-align: center;
   }
+
+  /* Reorder the cat profile on phones so the name, breed and key
+     details sit ABOVE the photo carousel, with the bio below it.
+     .cat-details goes display: contents so its two wrapper divs
+     become grid items of .cat-profile; the wrappers go back to
+     display: block so `order` can interleave them with the gallery. */
+  .cat-details {
+    display: contents;
+  }
+  .cat-details-header,
+  .cat-details-body {
+    display: block;
+  }
+  .cat-details-header { order: 1; }
+  .cat-gallery        { order: 2; }
+  .cat-details-body   { order: 3; }
 }
 
 .litter-profile-cta {

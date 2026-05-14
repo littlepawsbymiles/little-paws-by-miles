@@ -398,23 +398,27 @@ function renderCatPage(cat) {
 ${galleryHtml}
           </div>
           <div class="cat-details">
-            <span class="eyebrow">${htmlEscape(cat.breed)} · ${htmlEscape(cat.role)}</span>
-            <h1>${htmlEscape(cat.name)}</h1>
-            ${cat.registeredName ? `<p class="cat-details-registered">${htmlEscape(cat.registeredName)}</p>` : ''}
-            ${cat.tagline ? `<p class="cat-details-tagline">${htmlEscape(cat.tagline)}</p>` : ''}
-            <div class="cat-details-meta">
-              <span>${htmlEscape(cat.colour)}</span>
-              ${cat.registration ? `<span>${htmlEscape(cat.registration)}</span>` : ''}
-              ${cat.dob ? `<span>Born ${htmlEscape(cat.dob)}</span>` : ''}
+            <div class="cat-details-header">
+              <span class="eyebrow">${htmlEscape(cat.breed)} · ${htmlEscape(cat.role)}</span>
+              <h1>${htmlEscape(cat.name)}</h1>
+              ${cat.registeredName ? `<p class="cat-details-registered">${htmlEscape(cat.registeredName)}</p>` : ''}
+              ${cat.tagline ? `<p class="cat-details-tagline">${htmlEscape(cat.tagline)}</p>` : ''}
+              <div class="cat-details-meta">
+                <span>${htmlEscape(cat.colour)}</span>
+                ${cat.registration ? `<span>${htmlEscape(cat.registration)}</span>` : ''}
+                ${cat.dob ? `<span>Born ${htmlEscape(cat.dob)}</span>` : ''}
+              </div>
+              ${siblingsHtml}
             </div>
-            ${siblingsHtml}
-            <div class="cat-details-section" spellcheck="false">
-              <h2>About ${htmlEscape(cat.name)}</h2>
-              ${personalityHtml}
-            </div>
-            <div class="cat-details-actions">
-              ${cat.studRegisterUrl ? `<a href="${htmlEscape(cat.studRegisterUrl)}" target="_blank" rel="noopener" class="btn btn-outline btn-small" style="margin-right: 0.5rem;">View on GCCF Stud Register ↗</a>` : ''}
-              ${cat.role === 'Stud' ? `<a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>` : ''}
+            <div class="cat-details-body">
+              <div class="cat-details-section" spellcheck="false">
+                <h2>About ${htmlEscape(cat.name)}</h2>
+                ${personalityHtml}
+              </div>
+              <div class="cat-details-actions">
+                ${cat.studRegisterUrl ? `<a href="${htmlEscape(cat.studRegisterUrl)}" target="_blank" rel="noopener" class="btn btn-outline btn-small" style="margin-right: 0.5rem;">View on GCCF Stud Register ↗</a>` : ''}
+                ${cat.role === 'Stud' ? `<a href="/stud-services" class="btn btn-primary">Enquire about stud services</a>` : ''}
+              </div>
             </div>
           </div>
         </div>
