@@ -599,6 +599,266 @@ litters.forEach(litter => {
 console.log(`✓ Wrote ${litters.length} per-litter pages to litters/`);
 
 
+// ---------- Listing-page body renderers ----------
+// Mirrors of the runtime render* functions in js/main.js. Used by the
+// next pass to bake real <a href="/cats/bella"> grids etc. into the
+// static listing pages so non-JS crawlers see real content instead of
+// empty container divs. JS continues to detect the pre-rendered content
+// via data-prerendered="true" on the container and skips its main
+// render (only attaching interactivity).
+
+function renderCatCardHtml(cat) {
+  const cardSrc = cat.cardImage || (cat.photos && cat.photos[0]) || '';
+  const hasPhoto = !!cardSrc;
+  const altText = `${cat.name}, ${cat.colour} ${cat.breed} ${(cat.role || '').toLowerCase()}`;
+  const img = hasPhoto
+    ? `<img src="${htmlEscape(cardSrc)}" alt="${htmlEscape(altText)}" loading="lazy">`
+    : `<div class="cat-card-image placeholder">${htmlEscape((cat.name || '?').charAt(0).toUpperCase())}</div>`;
+  const tagline = cat.tagline ? `<p class="cat-card-tagline">${htmlEscape(cat.tagline)}</p>` : '';
+  return `<a href="/cats/${encodeURIComponent(cat.id)}" class="cat-card fade-in">
+    ${hasPhoto ? `<div class="cat-card-image">${img}</div>` : img}
+    <div class="cat-card-body">
+      <span class="cat-card-breed">${htmlEscape(cat.breed)}</span>
+      <h3>${htmlEscape(cat.name)}</h3>
+      ${tagline}
+      <span class="cat-card-role">${htmlEscape(cat.role)}</span>
+      <span class="btn btn-outline btn-small">Meet ${htmlEscape((cat.name || '').split(' ')[0])}</span>
+    </div>
+  </a>`;
+}
+
+function renderCatGridHtml() {
+  const groups = [
+    { heading: 'Ragdolls',          filter: c => c.breed === 'Ragdoll' },
+    { heading: 'Maine Coons',       filter: c => c.breed === 'Maine Coon' },
+    { heading: 'British Shorthair', filter: c => c.breed === 'British Shorthair' }
+  ];
+  return groups.map(group => {
+    const groupCats = cats.filter(group.filter);
+    if (groupCats.length === 0) return '';
+    return `<div class="cat-group">
+      <div class="cat-group-heading">
+        <h2>${htmlEscape(group.heading)}</h2>
+        <span>${groupCats.length} ${groupCats.length === 1 ? 'cat' : 'cats'}</span>
+      </div>
+      <div class="cat-grid">
+        ${groupCats.map(renderCatCardHtml).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderKittensHtml() {
+  if (!kittens.length) {
+    return `<div class="empty-state">
+      <div class="empty-state-icon">🌿</div>
+      <h3>No kittens available right now</h3>
+      <p>We don't have any kittens ready to go just yet, but lovely ones are always on the way. Pop your name on the waitlist below and we'll be in touch when the next litter arrives.</p>
+    </div>`;
+  }
+  const enquiryLink = (FORMS && FORMS.kittenEnquiry) ? FORMS.kittenEnquiry : '/contact';
+  const cards = kittens.map(k => {
+    const photos = Array.isArray(k.photos) ? k.photos.filter(p => p && p.length) : [];
+    const coverPhoto = k.cardImage || photos[0] || '';
+    const hasPhoto = !!coverPhoto;
+    const img = hasPhoto
+      ? `<img src="${htmlEscape(coverPhoto)}" alt="${htmlEscape(k.name)}" loading="lazy">`
+      : `<div class="kitten-card-image placeholder">${htmlEscape((k.name || '?').charAt(0).toUpperCase())}</div>`;
+    const status = (k.status || 'Available').trim();
+    const statusLower = status.toLowerCase();
+    const badgeClass = statusLower === 'reserved' ? 'reserved'
+                     : statusLower === 'sold'     ? 'sold' : '';
+    const badge = `<span class="kitten-badge ${badgeClass}">${htmlEscape(status)}</span>`;
+    const isAvailable = statusLower === 'available';
+    const cta = isAvailable
+      ? `<a href="${htmlEscape(enquiryLink)}" class="btn btn-primary"${enquiryLink.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>Reserve Me</a>`
+      : `<span class="btn btn-outline">${htmlEscape(status)}</span>`;
+    return `<div class="kitten-card fade-in">
+      ${hasPhoto ? `<div class="kitten-card-image">${badge}${img}</div>` : `${img}<div style="position:relative">${badge}</div>`}
+      <div class="kitten-card-body">
+        <h3>${htmlEscape(k.name)}</h3>
+        <div class="kitten-meta">
+          ${k.breed ? `<span>${htmlEscape(k.breed)}</span>` : ''}
+          ${k.sex ? `<span>${htmlEscape(k.sex)}</span>` : ''}
+          ${k.colour ? `<span>${htmlEscape(k.colour)}</span>` : ''}
+        </div>
+        ${k.price ? `<div class="kitten-price">${htmlEscape(k.price)}</div>` : ''}
+        ${cta}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="kitten-grid">${cards}</div>`;
+}
+
+function renderLitterCardHtml(litter) {
+  const detailUrl = `/litters/${encodeURIComponent(litter.id)}`;
+  const dam = litter.dam ? cats.find(c => c.id === litter.dam) : null;
+  const damHtml = dam
+    ? `<a href="/cats/${encodeURIComponent(dam.id)}">${htmlEscape(dam.name)}</a>`
+    : (litter.dam ? htmlEscape(litter.dam) : '');
+  let sireHtml = '';
+  if (litter.sire) {
+    const sire = cats.find(c => c.id === litter.sire);
+    if (sire) sireHtml = `<a href="/cats/${encodeURIComponent(sire.id)}">${htmlEscape(sire.name)}</a>`;
+  }
+  if (!sireHtml && litter.sireName) sireHtml = htmlEscape(litter.sireName);
+  const parentsBits = [];
+  if (damHtml)  parentsBits.push(`<span><strong>Dam:</strong> ${damHtml}</span>`);
+  if (sireHtml) parentsBits.push(`<span><strong>Sire:</strong> ${sireHtml}</span>`);
+  const parentsHtml = parentsBits.length ? `<div class="litter-parents">${parentsBits.join('')}</div>` : '';
+  const statusClass = litter.status === 'Past' ? 'litter-past' : 'litter-upcoming';
+  const hasThumb = litter.thumbnail && litter.thumbnail.length;
+  const thumbHtml = hasThumb
+    ? `<img src="${htmlEscape(litter.thumbnail)}" alt="${htmlEscape(litter.title)}" loading="lazy">`
+    : `<span class="litter-thumb-placeholder">${htmlEscape(((dam && dam.name) || litter.title || 'L').charAt(0).toUpperCase())}</span>`;
+  const waitlistLink = (FORMS && FORMS.waitlist) ? FORMS.waitlist : '/contact';
+  const waitlistCta = litter.status === 'Upcoming'
+    ? `<a href="${htmlEscape(waitlistLink)}" class="btn btn-primary btn-small"${waitlistLink.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>Join the waitlist</a>`
+    : '';
+  const readMoreLabel = litter.status === 'Past' ? 'Read their story' : 'See more about this litter';
+  return `<article class="litter-card ${statusClass} fade-in">
+    <a class="litter-thumb" href="${detailUrl}" aria-label="${htmlEscape(litter.title)} — full details">${thumbHtml}</a>
+    <div class="litter-body">
+      <div class="litter-header">
+        <span class="eyebrow">${htmlEscape(litter.status)} · ${htmlEscape(litter.breed)}</span>
+        <h3><a class="litter-title-link" href="${detailUrl}">${htmlEscape(litter.title)}</a></h3>
+        ${litter.dateLabel ? `<p class="litter-date">${htmlEscape(litter.dateLabel)}${litter.kittenCount ? ' · ' + htmlEscape(litter.kittenCount) : ''}</p>` : ''}
+      </div>
+      ${parentsHtml}
+      ${litter.summary ? `<p class="litter-summary">${htmlEscape(litter.summary)}</p>` : ''}
+      <div class="litter-card-actions">
+        <a class="btn btn-outline btn-small" href="${detailUrl}">${readMoreLabel}</a>
+        ${waitlistCta}
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderLittersHtml(statusFilter) {
+  const items = statusFilter ? litters.filter(l => l.status === statusFilter) : litters;
+  if (!items.length) {
+    const isUp = statusFilter === 'Upcoming';
+    const isPast = statusFilter === 'Past';
+    return `<div class="empty-state">
+      <div class="empty-state-icon">🌸</div>
+      <h3>${isUp ? 'Nothing on the calendar right now' : isPast ? 'No past litters documented yet' : 'No litters to show'}</h3>
+      <p>${isUp ? "We don't have any litters planned at the moment. Join the waitlist below and we'll let you know as soon as we do." : isPast ? "When we have raised litters, we'll write about them here." : 'Check back soon.'}</p>
+    </div>`;
+  }
+  return `<div class="litters-list">${items.map(renderLitterCardHtml).join('')}</div>`;
+}
+
+function renderStudsHtml() {
+  const studs = cats.filter(c => c.role === 'Stud');
+  if (!studs.length) return '<p class="text-centre">No studs listed at the moment.</p>';
+  return studs.map(stud => {
+    const hasPhoto = stud.photos && stud.photos[0];
+    const img = hasPhoto
+      ? `<img src="${htmlEscape(stud.photos[0])}" alt="${htmlEscape(stud.name)}" loading="lazy">`
+      : `<div class="stud-card-image placeholder">${htmlEscape((stud.name || '?').charAt(0).toUpperCase())}</div>`;
+    const personalityFirstPara = (stud.personality || '').split(/\n\s*\n/)[0] || '';
+    return `<div class="stud-card fade-in">
+      ${hasPhoto ? `<div class="stud-card-image">${img}</div>` : img}
+      <div class="stud-card-body">
+        <span class="stud-card-breed">${htmlEscape(stud.breed)} Stud</span>
+        <h3>${htmlEscape(stud.name)}</h3>
+        <p style="color: var(--grey); margin-bottom: 0.5rem;">${htmlEscape(stud.colour)}</p>
+        <p>${htmlEscape(personalityFirstPara)}</p>
+        ${stud.registration ? `<p style="font-size: 0.85rem; color: var(--grey);">${htmlEscape(stud.registration)}</p>` : ''}
+        <a href="/cats/${encodeURIComponent(stud.id)}" class="btn btn-outline btn-small mt-1">Full profile</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTestimonialCardHtml(t) {
+  const stars = '★'.repeat(Math.max(0, Math.min(5, Math.round(t.rating || 5)))) +
+                '☆'.repeat(5 - Math.max(0, Math.min(5, Math.round(t.rating || 5))));
+  const subtitleParts = [];
+  if (t.role) subtitleParts.push(t.role);
+  if (t.breed) subtitleParts.push(`${t.breed} Owner`);
+  const subtitle = subtitleParts.join(' · ');
+  let relatedCatHtml = '';
+  if (t.relatedCat) {
+    const cat = cats.find(c => c.id === t.relatedCat);
+    if (cat) {
+      relatedCatHtml = `<a class="testimonial-related" href="/cats/${encodeURIComponent(cat.id)}">About ${htmlEscape(cat.name)} →</a>`;
+    }
+  }
+  return `<div class="testimonial-card fade-in">
+    <div class="testimonial-stars" aria-label="${t.rating || 5} out of 5 stars">${stars}</div>
+    ${t.testimonialTitle ? `<h3 class="testimonial-title">${htmlEscape(t.testimonialTitle)}</h3>` : ''}
+    <p class="testimonial-text testimonial-text--clamped">${htmlEscape(t.comment)}</p>
+    <div class="testimonial-author">
+      <strong>${htmlEscape(t.name)}</strong>
+      ${subtitle ? `<span>${htmlEscape(subtitle)}</span>` : ''}
+      ${relatedCatHtml}
+    </div>
+  </div>`;
+}
+
+function renderTestimonialsHtml(limit) {
+  const items = typeof limit === 'number' ? testimonials.slice(0, limit) : testimonials;
+  return items.map(renderTestimonialCardHtml).join('');
+}
+
+function renderBreedOverviewHtml() {
+  const breeds = [
+    { name: 'Ragdoll',           icon: '✦', blurb: 'Gentle, floppy giants with striking blue eyes — famous for going limp in your arms.' },
+    { name: 'Maine Coon',        icon: '✦', blurb: 'Long-haired, dog-like personalities — playful, intelligent, and wonderfully sociable.' },
+    { name: 'British Shorthair', icon: '✦', blurb: 'Plush, round-faced teddy bears — calm, easy-going, and beautifully traditional.' }
+  ];
+  return breeds.map(b => `<div class="breed-card fade-in">
+    <div class="breed-icon">${b.icon}</div>
+    <h3>${htmlEscape(b.name)}</h3>
+    <p>${htmlEscape(b.blurb)}</p>
+  </div>`).join('');
+}
+
+// Map of static listing pages to (placeholder id → render fn). The
+// substitute pass below walks these and rewrites <div id="X"></div>
+// in place with the rendered content, marking the container with
+// data-prerendered="true" so the runtime JS render functions can
+// detect and skip the main render (attaching only interactivity).
+const LISTING_PAGE_RENDERS = {
+  'cats.html':              [{ id: 'cats-root',              html: renderCatGridHtml }],
+  'available-kittens.html': [{ id: 'kittens-root',           html: renderKittensHtml }],
+  'litters.html': [
+    { id: 'upcoming-litters-root', html: () => renderLittersHtml('Upcoming') },
+    { id: 'past-litters-root',     html: () => renderLittersHtml('Past') }
+  ],
+  'stud-services.html':     [{ id: 'studs-root',             html: renderStudsHtml }],
+  'testimonials.html':      [{ id: 'testimonials-root',      html: () => renderTestimonialsHtml() }],
+  'index.html': [
+    { id: 'breeds-root',       html: renderBreedOverviewHtml },
+    { id: 'testimonials-root', html: () => renderTestimonialsHtml(3) }
+  ]
+};
+
+// Substitute body content into a static page's empty placeholder
+// containers. Each placeholder div gets data-prerendered="true" added
+// to its opening tag and its inner contents replaced.
+function inlineListingBody(html, fileName) {
+  const renders = LISTING_PAGE_RENDERS[fileName];
+  if (!renders) return html;
+  let out = html;
+  for (const { id, html: renderFn } of renders) {
+    const content = renderFn();
+    // Match the empty placeholder div (with optional extra classes/attrs)
+    // and replace its inner contents while adding data-prerendered.
+    const re = new RegExp(`(<div\\b[^>]*\\bid="${id}"[^>]*?)(>)([\\s\\S]*?)(</div>)`, 'm');
+    out = out.replace(re, (m, open, gt, inner, close) => {
+      // Add data-prerendered attribute if not already present
+      const openWithFlag = /\bdata-prerendered=/.test(open)
+        ? open
+        : open + ' data-prerendered="true"';
+      return `${openWithFlag}${gt}${content}${close}`;
+    });
+  }
+  return out;
+}
+
+
 // ---------- Inline partials into static listing pages ----------
 // The hand-written listing pages (index, cats, available-kittens, etc.)
 // currently have <div id="site-header-placeholder"></div> and
@@ -625,11 +885,15 @@ if (process.env.CF_PAGES === '1' && HEADER_PARTIAL_RAW && FOOTER_PARTIAL_RAW) {
     // Active nav key — pulled from <body data-page="..."> on each page.
     const m = original.match(/<body[^>]*data-page="([^"]+)"/);
     const activeNavKey = m ? m[1] : '';
-    const updated = inlinePartials(original, activeNavKey);
+    let updated = inlinePartials(original, activeNavKey);
+    // Also bake the listing-page body content into its placeholder
+    // container(s) so non-JS crawlers see real grids/lists.
+    updated = inlineListingBody(updated, f);
     if (updated !== original) {
       fs.writeFileSync(fp, updated);
       inlinedCount++;
-      console.log(`  ✓ ${f}${activeNavKey ? ' (nav: ' + activeNavKey + ')' : ''}`);
+      const listingMarker = LISTING_PAGE_RENDERS[f] ? ' + body' : '';
+      console.log(`  ✓ ${f}${activeNavKey ? ' (nav: ' + activeNavKey + ')' : ''}${listingMarker}`);
     }
   }
   console.log(`✓ Inlined partials into ${inlinedCount} static pages`);

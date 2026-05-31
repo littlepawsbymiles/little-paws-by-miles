@@ -87,6 +87,9 @@ function renderAboutBio(headingTargetId, bodyTargetId) {
 function renderBreedOverview(targetId) {
   const target = document.getElementById(targetId);
   if (!target || typeof CATS === 'undefined') return;
+  // If the build script pre-rendered the breed grid into the page,
+  // skip the main render — the static HTML is what we want.
+  if (target.dataset.prerendered) return;
 
   const breedCounts = CATS.reduce((acc, cat) => {
     if (cat.role === 'Family Cat') return acc;
@@ -115,6 +118,8 @@ function renderBreedOverview(targetId) {
 function renderCatGrid(targetId) {
   const target = document.getElementById(targetId);
   if (!target || typeof CATS === 'undefined') return;
+  // Pre-rendered at build time — skip the main render.
+  if (target.dataset.prerendered) return;
 
   // Group cats by breed, preserving order
   const groups = [
@@ -467,6 +472,10 @@ function injectCatStructuredData(cat, businessUrl) {
 function renderKittens(targetId) {
   const target = document.getElementById(targetId);
   if (!target || typeof KITTENS === 'undefined') return;
+  // Pre-rendered at build time — skip the main render. The lightbox
+  // MutationObserver in initLightbox will still pick up the kitten
+  // card images automatically.
+  if (target.dataset.prerendered) return;
 
   if (!KITTENS.length) {
     target.innerHTML = `
@@ -577,6 +586,8 @@ function renderKittenCard(kitten) {
 function renderLitters(targetId, statusFilter) {
   const target = document.getElementById(targetId);
   if (!target || typeof LITTERS === 'undefined') return;
+  // Pre-rendered at build time — skip the main render.
+  if (target.dataset.prerendered) return;
 
   const items = statusFilter
     ? LITTERS.filter(l => l.status === statusFilter)
@@ -842,6 +853,12 @@ function injectLitterStructuredData(litter, businessUrl) {
 function renderTestimonials(targetId, limit, options) {
   const target = document.getElementById(targetId);
   if (!target || typeof TESTIMONIALS === 'undefined') return;
+  // Pre-rendered at build time — skip the main render but still attach
+  // the read-more toggles to the pre-rendered cards.
+  if (target.dataset.prerendered) {
+    requestAnimationFrame(() => attachReadMoreToggles(target));
+    return target.querySelectorAll('.testimonial-card').length;
+  }
 
   const opts = options || {};
   // Optional filter: show only testimonials tied to a given cat id
@@ -1049,6 +1066,8 @@ function renderFormEmbed(targetId, formKey, placeholderMessage) {
 function renderStuds(targetId) {
   const target = document.getElementById(targetId);
   if (!target || typeof CATS === 'undefined') return;
+  // Pre-rendered at build time — skip the main render.
+  if (target.dataset.prerendered) return;
 
   const studs = CATS.filter(c => c.role === 'Stud');
   if (!studs.length) {
