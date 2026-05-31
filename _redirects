@@ -2,6 +2,12 @@
 # Format:   <source>   <destination>   <status>
 # Status:   301 permanent, 302 temporary.
 
+# Force www -> apex. Without this, both versions serve 200 with a
+# canonical pointing at apex, which Google flags as "Alternative page
+# with proper canonical tag" — 14 such pages in the GSC report. This
+# rule consolidates them onto the apex domain at the edge.
+https://www.littlepawsbymiles.co.uk/*  https://littlepawsbymiles.co.uk/:splat  301
+
 # The two unregistered-dam litters were removed from the site for GCCF
 # compliance. Forward any external links to the main litters page.
 /litters/cookies-litter-may  /litters  301
