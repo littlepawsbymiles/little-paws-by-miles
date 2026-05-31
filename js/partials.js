@@ -16,7 +16,11 @@
 
   function loadPartial(id, url, after) {
     const el = document.getElementById(id);
-    if (!el) { if (after) after(); return; }
+    // If the placeholder doesn't exist, the header/footer has been inlined
+    // at build time. Skip the fetch AND the after-callback — both would
+    // duplicate work that's already baked into the static HTML (active
+    // nav class, mobile nav binding, footer year and social URLs).
+    if (!el) return;
     fetch(url)
       .then(r => r.ok ? r.text() : '')
       .then(html => {

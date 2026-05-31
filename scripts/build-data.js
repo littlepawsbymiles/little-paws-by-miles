@@ -284,6 +284,61 @@ function trimDescription(s, max) {
   return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trim() + '…';
 }
 
+// Read the header and footer partials once. We inline them into every
+// generated HTML page at build time so non-JS crawlers (Ahrefs, Semrush,
+// social previewers, plus Google's first crawl pass) see real navigation
+// links instead of empty <div id="site-header-placeholder"></div> shells.
+// The fetch in js/partials.js becomes a no-op once placeholders are gone.
+const HEADER_PARTIAL_RAW = fs.existsSync(path.join(ROOT, 'partials', 'header.html'))
+  ? fs.readFileSync(path.join(ROOT, 'partials', 'header.html'), 'utf8')
+  : '';
+const FOOTER_PARTIAL_RAW = fs.existsSync(path.join(ROOT, 'partials', 'footer.html'))
+  ? fs.readFileSync(path.join(ROOT, 'partials', 'footer.html'), 'utf8')
+  : '';
+
+// Substitute the site header and footer into the placeholder divs in `html`.
+// activeNavKey marks the matching <a data-nav="X"> with class="active" so
+// the current page is highlighted in the nav. Footer year and social URLs
+// are also filled in so the JS callback in partials.js becomes redundant.
+function inlinePartials(html, activeNavKey) {
+  if (!HEADER_PARTIAL_RAW || !FOOTER_PARTIAL_RAW) return html;
+
+  let header = HEADER_PARTIAL_RAW;
+  let footer = FOOTER_PARTIAL_RAW;
+
+  // Mark active nav link(s) — both desktop nav and mobile nav have a
+  // matching data-nav attribute, so a global match covers both.
+  if (activeNavKey) {
+    const navRe = new RegExp(`(<a\\b[^>]*data-nav="${activeNavKey}"[^>]*)`, 'g');
+    header = header.replace(navRe, '$1 class="active"');
+  }
+
+  // Bake in the footer year and the social URLs from BUSINESS so the
+  // footer is fully rendered without JS.
+  footer = footer
+    .replace(
+      /<span id="footer-year">[^<]*<\/span>/,
+      `<span id="footer-year">${new Date().getFullYear()}</span>`
+    );
+  if (BUSINESS && BUSINESS.instagram) {
+    footer = footer.replace(
+      /(<a\b[^>]*id="footer-instagram"[^>]*)href="[^"]*"/,
+      `$1href="${htmlEscape(BUSINESS.instagram)}"`
+    );
+  }
+  if (BUSINESS && BUSINESS.tiktok) {
+    footer = footer.replace(
+      /(<a\b[^>]*id="footer-tiktok"[^>]*)href="[^"]*"/,
+      `$1href="${htmlEscape(BUSINESS.tiktok)}"`
+    );
+  }
+
+  return html
+    .replace('<div id="site-header-placeholder"></div>', header)
+    .replace('<div id="site-footer-placeholder"></div>', footer);
+}
+
+
 // Mirror of renderCatPersonality in main.js — handles ## headings,
 // bullet lists, and paragraphs. Used to render cat bio + litter body.
 function renderMarkdownish(raw) {
@@ -303,7 +358,7 @@ function renderMarkdownish(raw) {
 }
 
 function pageShell({title, description, canonicalUrl, ogImage, dataPage, body, scriptInit}) {
-  return `<!DOCTYPE html>
+  const __out = `<!DOCTYPE html>
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
@@ -346,6 +401,7 @@ ${body}
 </body>
 </html>
 `;
+  return inlinePartials(__out, dataPage);
 }
 
 function renderCatPage(cat) {
@@ -541,6 +597,47 @@ litters.forEach(litter => {
   fs.writeFileSync(path.join(LITTERS_DIR, `${litter.id}.html`), html);
 });
 console.log(`✓ Wrote ${litters.length} per-litter pages to litters/`);
+
+
+// ---------- Inline partials into static listing pages ----------
+// The hand-written listing pages (index, cats, available-kittens, etc.)
+// currently have <div id="site-header-placeholder"></div> and
+// <div id="site-footer-placeholder"></div> that get filled by JS at
+// runtime. Non-JS crawlers see empty divs — which is why Ahrefs flags
+// "page has no outgoing links" on every listing page. We rewrite those
+// files in place at build time so the header (with all nav links) and
+// footer (with the social links and brand copy) are baked into the
+// static HTML.
+//
+// Env-gated so local builds don't mutate source files. Cloudflare builds
+// in a fresh git checkout, so the on-disk repo is never affected.
+if (process.env.CF_PAGES === '1' && HEADER_PARTIAL_RAW && FOOTER_PARTIAL_RAW) {
+  console.log('Production build — inlining header/footer into static pages...');
+  const rootFiles = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+  let inlinedCount = 0;
+  for (const f of rootFiles) {
+    const fp = path.join(ROOT, f);
+    const original = fs.readFileSync(fp, 'utf8');
+    // Skip pages that don't use the partial placeholder pattern —
+    // legacy redirect pages (cat.html, litter.html, upcoming-litters.html)
+    // are minimal redirect-only markup and have no placeholders.
+    if (!original.includes('id="site-header-placeholder"')) continue;
+    // Active nav key — pulled from <body data-page="..."> on each page.
+    const m = original.match(/<body[^>]*data-page="([^"]+)"/);
+    const activeNavKey = m ? m[1] : '';
+    const updated = inlinePartials(original, activeNavKey);
+    if (updated !== original) {
+      fs.writeFileSync(fp, updated);
+      inlinedCount++;
+      console.log(`  ✓ ${f}${activeNavKey ? ' (nav: ' + activeNavKey + ')' : ''}`);
+    }
+  }
+  console.log(`✓ Inlined partials into ${inlinedCount} static pages`);
+} else if (!HEADER_PARTIAL_RAW || !FOOTER_PARTIAL_RAW) {
+  console.warn('Partials missing — skipping inline pass');
+} else {
+  console.log('Local build — skipping static-page partial inlining (CF_PAGES not set).');
+}
 
 
 // ---------- Minification (production builds only) ----------
