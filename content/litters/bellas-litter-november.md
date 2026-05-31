@@ -9,7 +9,7 @@ sire: ralphy
 sireName: Ralphy
 dateLabel: "Born 4th November"
 kittenCount: "6 kittens, 4 boys and 2 girls"
-summary: "Bella's first litter. Six seal point kittens, all to wonderful new homes."
+summary: "Bella's first litter. Six healthy seal point Ragdoll kittens by Ralphy, born November 4th, raised at home in Leeds and placed with wonderful UK families."
 thumbnail: "images/cats/bella/bella-with-kittens.webp"
 photos:
   - images/litters/bellas-litter-november/bellas-litter-1.webp
