@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!--
+    ══════════════════════════════════════════════════════════════════
+    Little Paws By Miles — Sitemap
+    ══════════════════════════════════════════════════════════════════
+    Update the <lastmod> dates when pages change significantly.
+    When you update the site, submit this sitemap to Google Search Console
+    (https://search.google.com/search-console) to help Google re-index faster.
+  -->
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/about</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/available-kittens</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/litters</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/stud-services</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/testimonials</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/blog</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/contact</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Individual cat profiles -->
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/bella</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/cookie</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/dottie</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/ralphy</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/bobbie</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/billie</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/tilly</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/starsky</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/cats/annie</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Individual litter pages -->
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/litters/bellas-litter-november</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Individual blog posts -->
+  <url>
+    <loc>https://littlepawsbymiles.co.uk/blog/welcome-to-our-blog</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
