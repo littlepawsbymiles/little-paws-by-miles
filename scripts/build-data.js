@@ -173,6 +173,27 @@ const litters = readCollection(path.join(CONTENT, 'litters')).map(l => ({
   body: l._body || ''
 }));
 
+// Blog posts. Sorted by date descending (newest first) after reading.
+// Drafts are filtered out so nothing unpublished leaks to the live site;
+// Julia can still see them in the CMS while writing.
+const blog = readCollection(path.join(CONTENT, 'blog'))
+  .filter(p => (p.status || 'Published') === 'Published')
+  .map(p => ({
+    id: p.id || p._file.replace(/\.md$/, ''),
+    title: p.title || '',
+    date: p.date || '',
+    author: p.author || 'Julia',
+    category: p.category || 'Personal',
+    excerpt: p.excerpt || '',
+    coverImage: rootRel(p.coverImage || ''),
+    body: p._body || ''
+  }))
+  .sort((a, b) => {
+    // Newest first. Falls back to order field then title if dates tie.
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return (a.title || '').localeCompare(b.title || '');
+  });
+
 const testimonials = readCollection(path.join(CONTENT, 'testimonials')).map(t => ({
   name: t.name || '',
   role: t.role || '',
@@ -226,6 +247,8 @@ const out = [
   '',
   `const LITTERS = ${JSON.stringify(litters, null, 2)};`,
   '',
+  `const BLOG = ${JSON.stringify(blog, null, 2)};`,
+  '',
   `const TESTIMONIALS = ${JSON.stringify(testimonials, null, 2)};`,
   '',
   `const BUSINESS = ${JSON.stringify(BUSINESS, null, 2)};`,
@@ -239,7 +262,7 @@ const out = [
 fs.writeFileSync(OUT, out);
 
 console.log(`✓ Wrote ${path.relative(ROOT, OUT)}`);
-console.log(`  ${cats.length} cats, ${kittens.length} kittens, ${litters.length} litters, ${testimonials.length} testimonials`);
+console.log(`  ${cats.length} cats, ${kittens.length} kittens, ${litters.length} litters, ${testimonials.length} testimonials, ${blog.length} blog posts`);
 
 
 // ---------- Pre-render content pages ----------
@@ -580,11 +603,89 @@ function renderLitterPage(litter) {
   });
 }
 
+// Format an ISO date (YYYY-MM-DD) as "27 July 2026" for display.
+// Falls back to the raw string if parsing fails.
+function formatBlogDate(iso) {
+  if (!iso) return '';
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+// Slugify a category name for use as a CSS class modifier.
+function categorySlug(cat) {
+  return String(cat || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function renderBlogPage(post) {
+  const url = `${SITE_URL}blog/${encodeURIComponent(post.id)}`;
+  const cover = post.coverImage || '/images/logo.png';
+  const ogImage = absoluteUrl(cover);
+
+  const titleStr = `${post.title} — Little Paws By Miles Blog`;
+  const descRaw = post.excerpt || `${post.title} — ${post.category} post from Little Paws By Miles.`;
+  const descriptionStr = trimDescription(descRaw, 155);
+
+  const bodyHtml = renderMarkdownish(post.body);
+  const dateLabel = formatBlogDate(post.date);
+  const catSlug = categorySlug(post.category);
+
+  const coverHtml = post.coverImage
+    ? `<div class="blog-post-cover"><img src="${htmlEscape(post.coverImage)}" alt="${htmlEscape(post.title)}" loading="lazy"></div>`
+    : '';
+
+  const body = `
+    <div id="blog-post-root" data-post-id="${htmlEscape(post.id)}" style="padding-top: 2rem;">
+      <div class="container container-narrow">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">›</span>
+          <a href="/blog">Blog</a>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">${htmlEscape(post.title)}</span>
+        </nav>
+        <article class="blog-post">
+          <header class="blog-post-header">
+            <span class="blog-category-badge blog-category-${htmlEscape(catSlug)}">${htmlEscape(post.category)}</span>
+            <h1>${htmlEscape(post.title)}</h1>
+            <p class="blog-post-meta">
+              ${dateLabel ? `<time datetime="${htmlEscape(post.date)}">${htmlEscape(dateLabel)}</time>` : ''}
+              ${post.author ? ` · <span>By ${htmlEscape(post.author)}</span>` : ''}
+            </p>
+          </header>
+          ${coverHtml}
+          ${post.excerpt ? `<p class="blog-post-lead">${htmlEscape(post.excerpt)}</p>` : ''}
+          <div class="blog-post-body" spellcheck="false">${bodyHtml}</div>
+          <footer class="blog-post-footer">
+            <a href="/blog" class="btn btn-outline btn-small">← Back to all posts</a>
+          </footer>
+        </article>
+      </div>
+    </div>
+`;
+
+  const scriptInit = `document.addEventListener('DOMContentLoaded',function(){});`;
+
+  return pageShell({
+    title: titleStr,
+    description: descriptionStr,
+    canonicalUrl: url,
+    ogImage,
+    dataPage: 'blog',
+    body,
+    scriptInit
+  });
+}
+
 // Emit the files
 const CATS_DIR = path.join(ROOT, 'cats');
 const LITTERS_DIR = path.join(ROOT, 'litters');
+const BLOG_DIR = path.join(ROOT, 'blog');
 if (!fs.existsSync(CATS_DIR)) fs.mkdirSync(CATS_DIR, { recursive: true });
 if (!fs.existsSync(LITTERS_DIR)) fs.mkdirSync(LITTERS_DIR, { recursive: true });
+if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
 
 cats.forEach(cat => {
   const html = renderCatPage(cat);
@@ -597,6 +698,12 @@ litters.forEach(litter => {
   fs.writeFileSync(path.join(LITTERS_DIR, `${litter.id}.html`), html);
 });
 console.log(`✓ Wrote ${litters.length} per-litter pages to litters/`);
+
+blog.forEach(post => {
+  const html = renderBlogPage(post);
+  fs.writeFileSync(path.join(BLOG_DIR, `${post.id}.html`), html);
+});
+console.log(`✓ Wrote ${blog.length} per-post pages to blog/`);
 
 
 // ---------- Listing-page body renderers ----------
@@ -815,6 +922,38 @@ function renderBreedOverviewHtml() {
   </div>`).join('');
 }
 
+function renderBlogCardHtml(post) {
+  const detailUrl = `/blog/${encodeURIComponent(post.id)}`;
+  const dateLabel = formatBlogDate(post.date);
+  const catSlug = categorySlug(post.category);
+  const coverHtml = post.coverImage
+    ? `<a class="blog-card-cover" href="${detailUrl}" aria-label="${htmlEscape(post.title)}"><img src="${htmlEscape(post.coverImage)}" alt="${htmlEscape(post.title)}" loading="lazy"></a>`
+    : '';
+  return `<article class="blog-card fade-in${post.coverImage ? '' : ' blog-card--no-cover'}">
+    ${coverHtml}
+    <div class="blog-card-body">
+      <span class="blog-category-badge blog-category-${htmlEscape(catSlug)}">${htmlEscape(post.category)}</span>
+      <h3><a class="blog-card-title-link" href="${detailUrl}">${htmlEscape(post.title)}</a></h3>
+      <p class="blog-card-meta">
+        ${dateLabel ? `<time datetime="${htmlEscape(post.date)}">${htmlEscape(dateLabel)}</time>` : ''}
+        ${post.author ? ` · <span>By ${htmlEscape(post.author)}</span>` : ''}
+      </p>
+      ${post.excerpt ? `<p class="blog-card-excerpt">${htmlEscape(post.excerpt)}</p>` : ''}
+      <a href="${detailUrl}" class="blog-card-read-more">Read post →</a>
+    </div>
+  </article>`;
+}
+
+function renderBlogListingHtml() {
+  if (!blog.length) {
+    return `<div class="empty-state">
+      <h3>Nothing here yet</h3>
+      <p>We haven't published any posts yet. Check back soon.</p>
+    </div>`;
+  }
+  return `<div class="blog-list">${blog.map(renderBlogCardHtml).join('')}</div>`;
+}
+
 // Map of static listing pages to (placeholder id → render fn). The
 // substitute pass below walks these and rewrites <div id="X"></div>
 // in place with the rendered content, marking the container with
@@ -829,6 +968,7 @@ const LISTING_PAGE_RENDERS = {
   ],
   'stud-services.html':     [{ id: 'studs-root',             html: renderStudsHtml }],
   'testimonials.html':      [{ id: 'testimonials-root',      html: () => renderTestimonialsHtml() }],
+  'blog.html':              [{ id: 'blog-root',              html: renderBlogListingHtml }],
   'index.html': [
     { id: 'breeds-root',       html: renderBreedOverviewHtml },
     { id: 'testimonials-root', html: () => renderTestimonialsHtml(3) }

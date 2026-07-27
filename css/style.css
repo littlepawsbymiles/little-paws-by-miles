@@ -2906,3 +2906,213 @@ a.litter-thumb img {
   height: 100%;
   object-fit: cover;
 }
+
+/* ============================================================================
+   Blog
+   ========================================================================== */
+
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.blog-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.75rem;
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.blog-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+.blog-card--no-cover {
+  grid-template-columns: 1fr;
+}
+
+.blog-card-cover {
+  display: block;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+.blog-card-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.blog-card-cover:hover img {
+  transform: scale(1.03);
+}
+
+.blog-card-body {
+  padding: 1.5rem 1.75rem 1.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.blog-card--no-cover .blog-card-body {
+  padding: 1.75rem 2rem;
+}
+
+.blog-card-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1.25;
+  margin: 0.1rem 0 0;
+  color: var(--charcoal);
+}
+.blog-card-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.blog-card-title-link:hover {
+  color: var(--brown);
+}
+
+.blog-card-meta {
+  font-size: 0.85rem;
+  color: var(--grey);
+  margin: 0;
+}
+
+.blog-card-excerpt {
+  font-size: 0.98rem;
+  color: var(--charcoal);
+  line-height: 1.55;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.blog-card-read-more {
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--brown);
+  text-decoration: none;
+  margin-top: auto;
+  transition: color 0.2s ease;
+}
+.blog-card-read-more:hover {
+  color: var(--brown-deep);
+}
+
+/* Category badges — one subtle tint per category. */
+.blog-category-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--cream-deep);
+  color: var(--brown-deep);
+}
+.blog-category-kitten-diary   { background: var(--pale-blue);    color: var(--blue-deep); }
+.blog-category-care-advice    { background: #EAE1D0;             color: var(--brown-deep); }
+.blog-category-news           { background: var(--cream-deep);   color: var(--brown-deep); }
+.blog-category-personal       { background: #E7D9C8;             color: var(--brown-deep); }
+
+/* ---- Individual post page ---- */
+
+.blog-post {
+  padding: 1.5rem 0 3rem;
+}
+
+.blog-post-header {
+  margin-bottom: 1.5rem;
+}
+.blog-post-header .blog-category-badge {
+  margin-bottom: 1rem;
+}
+.blog-post-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  color: var(--charcoal);
+}
+.blog-post-meta {
+  font-size: 0.9rem;
+  color: var(--grey);
+  margin: 0;
+}
+
+.blog-post-cover {
+  margin: 1.5rem -1rem 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--cream-deep);
+  box-shadow: var(--shadow-soft);
+}
+.blog-post-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: cover;
+}
+
+.blog-post-lead {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--brown-deep);
+  margin: 0 0 1.75rem;
+}
+
+.blog-post-body {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--charcoal);
+}
+.blog-post-body p {
+  margin: 0 0 1.25rem;
+}
+.blog-post-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin: 2rem 0 0.75rem;
+  color: var(--charcoal);
+}
+.blog-post-body ul {
+  margin: 0 0 1.25rem;
+  padding-left: 1.4rem;
+}
+.blog-post-body li {
+  margin-bottom: 0.4rem;
+}
+
+.blog-post-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 720px) {
+  .blog-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .blog-card-cover {
+    aspect-ratio: 16 / 9;
+  }
+  .blog-card-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  .blog-post-cover {
+    margin: 1.25rem 0 1.75rem;
+  }
+}

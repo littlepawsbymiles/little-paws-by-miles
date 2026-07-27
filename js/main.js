@@ -693,6 +693,65 @@ function renderLitterCard(litter) {
 }
 
 
+/* ---------- Render: Blog listing (blog.html) ---------- */
+/* Almost always pre-rendered at build time — the runtime path is only
+   used in local dev before running `node scripts/build-data.js`. */
+function renderBlogListing(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target || typeof BLOG === 'undefined') return;
+  // Pre-rendered at build time — skip.
+  if (target.dataset.prerendered) return;
+
+  if (!BLOG.length) {
+    target.innerHTML = `
+      <div class="empty-state">
+        <h3>Nothing here yet</h3>
+        <p>We haven't published any posts yet. Check back soon.</p>
+      </div>
+    `;
+    return;
+  }
+
+  target.innerHTML = `
+    <div class="blog-list">
+      ${BLOG.map(renderBlogCard).join('')}
+    </div>
+  `;
+  observeFadeIns(target);
+}
+
+function renderBlogCard(post) {
+  const detailUrl = `/blog/${encodeURIComponent(post.id)}`;
+  const dateLabel = formatBlogDateLabel(post.date);
+  const catSlug = String(post.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const coverHtml = post.coverImage
+    ? `<a class="blog-card-cover" href="${detailUrl}" aria-label="${escapeHtml(post.title)}"><img src="${escapeHtml(post.coverImage)}" alt="${escapeHtml(post.title)}" loading="lazy"></a>`
+    : '';
+  return `<article class="blog-card fade-in${post.coverImage ? '' : ' blog-card--no-cover'}">
+    ${coverHtml}
+    <div class="blog-card-body">
+      <span class="blog-category-badge blog-category-${escapeHtml(catSlug)}">${escapeHtml(post.category)}</span>
+      <h3><a class="blog-card-title-link" href="${detailUrl}">${escapeHtml(post.title)}</a></h3>
+      <p class="blog-card-meta">
+        ${dateLabel ? `<time datetime="${escapeHtml(post.date)}">${escapeHtml(dateLabel)}</time>` : ''}
+        ${post.author ? ` · <span>By ${escapeHtml(post.author)}</span>` : ''}
+      </p>
+      ${post.excerpt ? `<p class="blog-card-excerpt">${escapeHtml(post.excerpt)}</p>` : ''}
+      <a href="${detailUrl}" class="blog-card-read-more">Read post →</a>
+    </div>
+  </article>`;
+}
+
+function formatBlogDateLabel(iso) {
+  if (!iso) return '';
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+
 /* ---------- Render: Individual litter profile (litter.html?id=...) ---------- */
 function renderLitterProfile(targetId) {
   const target = document.getElementById(targetId);

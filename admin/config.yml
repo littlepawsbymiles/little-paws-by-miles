@@ -243,6 +243,43 @@ collections:
         hint: 'The story of this litter. Can be several paragraphs — use ## for section headings.'
 
   # --------------------------------------------------------------------------
+  #  BLOG POSTS
+  # --------------------------------------------------------------------------
+  - name: 'blog'
+    label: 'Blog posts'
+    label_singular: 'Blog post'
+    folder: 'content/blog'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{title}} ({{category}}, {{date}})'
+    sortable_fields: ['date', 'category', 'title']
+    # Photos uploaded while editing a post land in the shared blog images
+    # folder — one folder rather than per-post makes it easier to reuse
+    # images across posts.
+    media_folder: '/images/blog'
+    public_folder: '/images/blog'
+    view_groups:
+      - label: By category
+        field: category
+      - label: By status
+        field: status
+    fields:
+      - {label: 'Display order (optional)', name: 'order', widget: 'number', value_type: 'int', min: 0, required: false, hint: 'Usually leave blank — posts sort by date. Only fill in if you want to force a post to the top.'}
+      - {label: 'ID (URL slug)', name: 'id', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used in the URL. e.g. 'first-litter-update-week-3'. Don't change this after publishing — it will break bookmarks."}
+      - {label: 'Title', name: 'title', widget: 'string', hint: 'The post title, shown as the page heading.'}
+      - {label: 'Date', name: 'date', widget: 'datetime', date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD', hint: 'The date shown on the post and used for sorting. Newest posts appear first.'}
+      - {label: 'Author', name: 'author', widget: 'string', default: 'Julia', hint: "Who wrote the post. Usually 'Julia' or 'Mark'."}
+      - {label: 'Category', name: 'category', widget: 'select', options: ['Kitten Diary', 'Care & Advice', 'News', 'Personal'], default: 'Personal', hint: 'Shown as a coloured badge on the post card.'}
+      - {label: 'Status', name: 'status', widget: 'select', options: ['Draft', 'Published'], default: 'Draft', hint: "Only 'Published' posts appear on the site. Save as 'Draft' while you're writing."}
+      - {label: 'Short excerpt', name: 'excerpt', widget: 'text', hint: 'One or two sentences summarising the post. Shown on the blog listing card and used as the SEO meta description. Aim for 120 to 155 characters.'}
+      - {label: 'Cover image (optional)', name: 'coverImage', widget: 'image', required: false, hint: 'Optional hero photo shown at the top of the post and on the listing card. Landscape (e.g. 1200x900) looks best. If blank, the card just shows text.'}
+      - label: 'Post body'
+        name: 'body'
+        widget: 'markdown'
+        hint: 'The full post. Use paragraphs. Add ## for section headings, - for bullet lists.'
+
+  # --------------------------------------------------------------------------
   #  TESTIMONIALS
   # --------------------------------------------------------------------------
   - name: 'testimonials'
