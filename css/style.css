@@ -205,7 +205,7 @@ section {
 .nav-menu {
   display: none;
   list-style: none;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
 }
 
@@ -215,6 +215,7 @@ section {
   font-weight: 400;
   position: relative;
   padding: 0.5rem 0;
+  white-space: nowrap;
 }
 
 .nav-menu a::after {
@@ -267,7 +268,7 @@ section {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1080px) {
   .nav-menu {
     display: flex;
   }
@@ -307,9 +308,21 @@ section {
   border-bottom: none;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1080px) {
   .mobile-nav {
     display: none !important;
+  }
+}
+
+/* Extra tightening on narrower desktops (1080-1280) so all 9 nav items
+   fit comfortably on one line without wrapping. Below 1080 the hamburger
+   takes over anyway. */
+@media (min-width: 1080px) and (max-width: 1280px) {
+  .nav-menu {
+    gap: 1.1rem;
+  }
+  .nav-menu a {
+    font-size: 0.9rem;
   }
 }
 
