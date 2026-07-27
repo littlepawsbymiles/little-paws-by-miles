@@ -14,12 +14,20 @@
 # ============================================================================
 
 # Where content gets saved and who can save it.
-# GitHub backend: editors authenticate with a GitHub account (via Sveltia's
-# hosted OAuth proxy) and commits go directly into this repo.
+# GitHub backend: editors authenticate with a GitHub account and commits go
+# directly into this repo. Auth is handled by a self-hosted OAuth proxy —
+# a small Cloudflare Worker deployed from Sveltia's official
+# sveltia-cms-auth repository (https://github.com/sveltia/sveltia-cms-auth).
+# The Worker holds the GitHub OAuth Client Secret so it never touches a
+# third party.
 backend:
   name: github
   repo: littlepawsbymiles/little-paws-by-miles
   branch: main
+  # TODO: paste your deployed Worker URL here (no trailing slash, no path).
+  # e.g. base_url: https://cms-auth.your-subdomain.workers.dev
+  # Until this is set, /admin login won't work.
+  # base_url: https://TODO-set-after-worker-deploy.workers.dev
 
 # Simple publish flow — a small trusted family team, no editorial review needed.
 publish_mode: simple
