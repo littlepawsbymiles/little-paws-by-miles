@@ -2,10 +2,13 @@
 order: 0
 id: bella
 name: Bella
+registeredName: ''
 breed: Ragdoll
 role: Queen
 colour: Blue Point
 registration: GCCF Registered
+dob: ''
+studRegisterUrl: ''
 tagline: Our blue point girl, and probably the softest soul in the house.
 siblings: []
 photos:
@@ -15,7 +18,7 @@ photos:
   - images/cats/bella/bella-with-kittens.webp
 ---
 
-Bella is our blue point girl, and probably the softest soul in the house. Her pedigree is something we're genuinely proud of. She comes from a line full of Champions and Grand Champions, and she carries chocolate and dilute, which makes her particularly interesting from a breeding point of view.
+\*\*\*\*\*Bella is our blue point girl, and probably the softest soul in the house. Her pedigree is something we're genuinely proud of. She comes from a line full of Champions and Grand Champions, and she carries chocolate and dilute, which makes her particularly interesting from a breeding point of view.
 
 All of that matters. But what matters more, day-to-day, is that Bella is the cat who quietly appears next to you the moment you sit down. Classic Ragdoll, really. She doesn't demand attention, she just wants to be near.
 
