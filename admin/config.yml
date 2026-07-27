@@ -1,28 +1,32 @@
 # ============================================================================
-#  Decap CMS configuration — Little Paws By Miles
+#  Sveltia CMS configuration — Little Paws By Miles
 # ----------------------------------------------------------------------------
 #  This file defines what the admin panel looks like for editors.
 #  Every "collection" below becomes a section in the left-hand sidebar of
 #  the admin. Every "field" becomes a form field in the editor.
+#
+#  Sveltia is a modern fork of Decap CMS. It reads this same Decap-format
+#  config with only the backend section differing (direct GitHub OAuth
+#  instead of Netlify Identity's Git Gateway).
 #
 #  If you (the site owner) ever want to add a new field to, say, cats, add it
 #  here AND add it to scripts/build-data.js so it flows through to the site.
 # ============================================================================
 
 # Where content gets saved and who can save it.
-# "github" backend = editors authenticate with a GitHub account and commits go
-# into your repo. We'll fill in REPO_OWNER/REPO_NAME once the repo is created.
+# GitHub backend: editors authenticate with a GitHub account (via Sveltia's
+# hosted OAuth proxy) and commits go directly into this repo.
 backend:
-  name: git-gateway
+  name: github
+  repo: littlepawsbymiles/little-paws-by-miles
   branch: main
-  # Optional: open_authoring lets editors submit changes via pull request
-  # without direct repo access. Keep off for now (all editors are trusted).
 
-# Editorial workflow enables draft/review/publish stages.
-# For a small family team, simple publish is fine.
+# Simple publish flow — a small trusted family team, no editorial review needed.
 publish_mode: simple
 
-# Where uploaded media files end up (relative to the site root).
+# Fallback media location for anything that isn't per-collection organised
+# (e.g. About-page photos, one-off assets). Per-collection folders below
+# override this for cats / kittens / litters.
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
@@ -45,10 +49,10 @@ slug:
 collections:
 
   # --------------------------------------------------------------------------
-  #  CATS — queens and studs
+  #  CATS — queens, studs and family cats
   # --------------------------------------------------------------------------
   - name: 'cats'
-    label: 'Cats (queens & studs)'
+    label: 'Cats (queens, studs & family cats)'
     label_singular: 'Cat'
     folder: 'content/cats'
     create: true
@@ -56,6 +60,11 @@ collections:
     slug: '{{slug}}'
     summary: '{{name}} — {{breed}} {{role}}'
     sortable_fields: ['order', 'name', 'breed', 'role']
+    # Photos uploaded while editing a cat land in that cat's own folder,
+    # so Bella's uploads go to images/cats/bella/, Cookie's to
+    # images/cats/cookie/, and so on. Matches the existing repo layout.
+    media_folder: '/images/cats/{{fields.id}}'
+    public_folder: '/images/cats/{{fields.id}}'
     view_groups:
       - label: By breed
         field: breed
@@ -67,7 +76,7 @@ collections:
       - {label: 'Name', name: 'name', widget: 'string'}
       - {label: 'Registered (full) name', name: 'registeredName', widget: 'string', required: false, hint: "Full pedigree name, if the cat has one. e.g. 'Bluemaines Danzis Starsky'. Leave blank for unregistered cats."}
       - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
-      - {label: 'Role', name: 'role', widget: 'select', options: ['Queen', 'Stud']}
+      - {label: 'Role', name: 'role', widget: 'select', options: ['Queen', 'Stud', 'Family Cat'], hint: "Queens and studs are part of our breeding programme. Family cats are much-loved household cats not used for breeding — they still appear on Meet the Cats but aren't counted as breeding queens/studs."}
       - {label: 'Colour / pattern', name: 'colour', widget: 'string', hint: "e.g. 'Blue Point', 'Lilac Lynx', 'Black Silver Mackerel Tabby'"}
       - {label: 'Registration', name: 'registration', widget: 'string', required: false, hint: "e.g. 'GCCF Registered' or 'GCCF & TICA Dual Registered · GCCF Stud Register'. Leave blank if unregistered."}
       - {label: 'Date of birth', name: 'dob', widget: 'string', required: false, hint: "e.g. '2 April 2023'. Shown on stud profiles where useful."}
@@ -83,20 +92,21 @@ collections:
         multiple: true
         required: false
         hint: 'Other cats that share a parent. Shown as clickable "Sister to…" links on the profile.'
+      - {label: 'Card image (optional)', name: 'cardImage', widget: 'image', required: false, hint: 'Optional override for the small thumbnail used on the Meet the Cats grid. If blank, the first photo below is used.'}
       - label: 'Photos'
         name: 'photos'
         widget: 'list'
         required: false
         summary: '{{fields.image}}'
         field: {label: 'Photo', name: 'image', widget: 'image'}
-        hint: 'First photo is the main card/hero image. Upload square-ish images for best results.'
+        hint: 'The gallery on the cat profile page. First photo is used as the main hero image (and the card image if none is set above).'
       - label: 'About (full description)'
         name: 'body'
         widget: 'markdown'
         hint: 'Full description shown on the cat profile page. Use paragraphs to break up text.'
 
   # --------------------------------------------------------------------------
-  #  KITTENS — currently available for sale
+  #  KITTENS — currently or upcoming for sale
   # --------------------------------------------------------------------------
   - name: 'kittens'
     label: 'Available kittens'
@@ -107,18 +117,65 @@ collections:
     slug: '{{slug}}'
     summary: '{{name}} — {{breed}} {{sex}} ({{status}})'
     sortable_fields: ['order', 'name', 'breed']
+    # Uploads while editing a kitten go into that kitten's own folder.
+    media_folder: '/images/kittens/{{fields.id}}'
+    public_folder: '/images/kittens/{{fields.id}}'
     fields:
+      - {label: 'Active', name: 'active', widget: 'boolean', default: true, hint: "Tick to show this kitten on the Available Kittens page. Untick to hide (e.g. sold or template)."}
       - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0}
-      - {label: 'Name', name: 'name', widget: 'string', hint: 'Give each kitten a placeholder name to help buyers choose.'}
+      - {label: 'ID (URL slug)', name: 'id', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used in the URL and to organise uploaded photos. e.g. 'jellybean-may-2026'."}
+      - {label: 'Name', name: 'name', widget: 'string', hint: "The kitten's temporary name — helps buyers refer to them."}
       - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
-      - {label: 'Sex', name: 'sex', widget: 'select', options: ['Male', 'Female']}
-      - {label: 'Colour / pattern', name: 'colour', widget: 'string'}
+      - {label: 'Sex', name: 'sex', widget: 'select', options: ['Boy', 'Girl']}
+      - {label: 'Colour / pattern', name: 'colour', widget: 'string', hint: "e.g. 'Seal Point', 'Blue Silver Tabby'"}
+      - {label: 'Date of birth', name: 'dob', widget: 'string', required: false, hint: "e.g. '1st May 2026'"}
+      - {label: 'Available from', name: 'availableFrom', widget: 'string', required: false, hint: "When they can leave for their new home. e.g. '13 weeks' or 'End of July 2026'"}
       - {label: 'Price', name: 'price', widget: 'string', required: false, hint: "e.g. '£1,200' — include the £ sign."}
-      - {label: 'Status', name: 'status', widget: 'select', options: ['Available', 'Reserved'], default: 'Available'}
-      - {label: 'Photo', name: 'photo', widget: 'image', required: false}
+      - {label: 'Status', name: 'status', widget: 'select', options: ['Available', 'Reserved', 'Sold'], default: 'Available'}
+      - label: 'Dam (mother)'
+        name: 'dam'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        required: false
+        hint: "Pick this kitten's mother from our cats. Shown as a clickable link on the kitten card."
+      - label: 'Sire (father) — our own cat'
+        name: 'sireId'
+        widget: 'relation'
+        collection: 'cats'
+        search_fields: ['name']
+        value_field: 'id'
+        display_fields: ['name']
+        required: false
+        hint: "If the sire is one of our own studs (e.g. Ralphy), pick him. Leave blank if external."
+      - {label: 'Sire name (if external)', name: 'sireName', widget: 'string', required: false, hint: "Only fill in if the sire is external — not one of ours. Leave blank if you picked a sire above."}
+      - label: 'Litter'
+        name: 'litterId'
+        widget: 'relation'
+        collection: 'litters'
+        search_fields: ['title']
+        value_field: 'id'
+        display_fields: ['title']
+        required: false
+        hint: 'Link this kitten to their litter page. Adds a "From [litter name]" link on the kitten card.'
+      - {label: 'Card image (optional)', name: 'cardImage', widget: 'image', required: false, hint: 'Optional override for the card thumbnail. If blank, the first gallery photo below is used.'}
+      - label: 'Photos'
+        name: 'photos'
+        widget: 'list'
+        required: false
+        summary: '{{fields.image}}'
+        field: {label: 'Photo', name: 'image', widget: 'image'}
+        hint: 'The kitten gallery. First photo becomes the card thumbnail if no card image is set.'
+      - label: 'Notes'
+        name: 'body'
+        widget: 'markdown'
+        required: false
+        hint: 'Optional personality / colour notes for this specific kitten.'
 
   # --------------------------------------------------------------------------
-  #  LITTERS — upcoming / planned
+  #  LITTERS — upcoming, current and past
   # --------------------------------------------------------------------------
   - name: 'litters'
     label: 'Litters (upcoming & past)'
@@ -129,12 +186,15 @@ collections:
     slug: '{{slug}}'
     summary: '{{title}} — {{status}} ({{breed}})'
     sortable_fields: ['order', 'status', 'breed']
+    # Litter photos land in the litter's own folder for gallery organisation.
+    media_folder: '/images/litters/{{fields.id}}'
+    public_folder: '/images/litters/{{fields.id}}'
     view_groups:
       - label: By status
         field: status
     fields:
       - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0, hint: 'Lower numbers appear first within each section.'}
-      - {label: 'ID (URL slug)', name: 'id', widget: 'string', required: false, pattern: ['^[a-z0-9-]*$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used internally. Auto-generated from filename if left blank."}
+      - {label: 'ID (URL slug)', name: 'id', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Used in the URL and to organise photos. e.g. 'bellas-litter-november'."}
       - {label: 'Status', name: 'status', widget: 'select', options: ['Upcoming', 'Past'], default: 'Upcoming', hint: 'Upcoming ones show at the top of the litters page; past ones below.'}
       - {label: 'Title', name: 'title', widget: 'string', hint: "e.g. \"Bella's Litter\"."}
       - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
@@ -158,9 +218,17 @@ collections:
         hint: "If the sire is one of our own studs (e.g. Ralphy), pick him here. Leave blank if it's an external stud."
       - {label: 'Sire name (if external)', name: 'sireName', widget: 'string', required: false, hint: "Only fill in if the sire is an external stud (i.e. not one of ours). Leave blank if you picked a sire above."}
       - {label: 'Date label', name: 'dateLabel', widget: 'string', required: false, hint: "Free text. e.g. 'Born 4th November' for past, or 'Expected Early June 2026' for upcoming."}
-      - {label: 'Kitten count', name: 'kittenCount', widget: 'string', required: false, hint: "e.g. '6 kittens — 3 of each' or '4–6 expected'."}
-      - {label: 'Short summary', name: 'summary', widget: 'string', required: false, hint: "One-line summary shown under the title."}
-      - {label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false, hint: "A square-ish photo for the card. Ideally at least 400x400 pixels."}
+      - {label: 'Kitten count', name: 'kittenCount', widget: 'string', required: false, hint: "e.g. '6 kittens, 3 of each' or '4 to 6 expected'."}
+      - {label: 'Short summary', name: 'summary', widget: 'string', required: false, hint: "One-line summary shown under the title. Also becomes the SEO meta description for the litter's detail page — aim for 120 to 155 characters for best results."}
+      - {label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false, hint: "Square-ish photo for the card on the litters list. At least 400x400 pixels."}
+      - {label: 'Cover image (optional)', name: 'coverImage', widget: 'image', required: false, hint: "Larger hero photo shown at the top of the litter's detail page. If blank, the thumbnail is used instead. A landscape photo (e.g. 1200x900) looks best."}
+      - label: 'Photos'
+        name: 'photos'
+        widget: 'list'
+        required: false
+        summary: '{{fields.image}}'
+        field: {label: 'Photo', name: 'image', widget: 'image'}
+        hint: 'Gallery shown on the litter detail page. Add as many as you like.'
       - label: 'Full description'
         name: 'body'
         widget: 'markdown'
@@ -181,8 +249,8 @@ collections:
     fields:
       - {label: 'Display order', name: 'order', widget: 'number', value_type: 'int', min: 0}
       - {label: 'Name', name: 'name', widget: 'string', hint: "First name and last initial, or family name e.g. 'The Phair Family'."}
-      - {label: 'Role / relationship', name: 'role', widget: 'string', required: false, hint: "e.g. 'Miso's family', 'Royal Ragdolls'. Optional — shown below the name."}
-      - {label: 'Breed', name: 'breed', widget: 'select', options: ['Ragdoll', 'Maine Coon', 'British Shorthair']}
+      - {label: 'Role / relationship', name: 'role', widget: 'string', required: false, hint: "e.g. 'Miso's family', 'Ragdoll Queen Owner'. Optional — shown below the name."}
+      - {label: 'Breed', name: 'breed', widget: 'string', required: false, hint: "e.g. 'Ragdoll'. Optional. Leave blank to avoid the auto-generated 'Ragdoll Owner' subtitle line."}
       - {label: 'Rating (1–5)', name: 'rating', widget: 'number', value_type: 'int', min: 1, max: 5, default: 5}
       - label: 'Related cat (optional)'
         name: 'relatedCat'
@@ -193,10 +261,11 @@ collections:
         display_fields: ['name']
         required: false
         hint: "If this testimonial is specifically about one of our cats, pick them here. The testimonial will appear on that cat's profile page too."
-      - {label: 'Comment', name: 'body', widget: 'text', hint: 'What the owner said. A few sentences looks best on the site.'}
+      - {label: 'Testimonial title (short headline)', name: 'testimonialTitle', widget: 'string', required: false, hint: "Short punchy quote used as the card headline. e.g. 'Every mile of our two-hour journey was worth it'. Do NOT wrap in quote marks — the site adds them for you."}
+      - {label: 'Comment', name: 'body', widget: 'text', hint: 'The full testimonial in the owner\'s words. A few sentences looks best on the site.'}
 
   # --------------------------------------------------------------------------
-  #  SITE SETTINGS — business info and form URLs
+  #  SITE SETTINGS — business info, forms, and About page bio
   #  A "files" collection has fixed files rather than editor-created ones.
   # --------------------------------------------------------------------------
   - name: 'settings'
@@ -235,7 +304,8 @@ collections:
         file: 'content/settings/about.md'
         fields:
           - {label: 'Heading', name: 'breedersHeading', widget: 'string', default: 'Julia & Mark', hint: 'The heading shown above the bio. e.g. "Julia & Mark".'}
-          - {label: 'Photo alt text', name: 'photoAlt', widget: 'string', required: false, hint: 'Describes the breeders photo for screen readers and SEO.'}
+          - {label: 'Photo', name: 'photo', widget: 'image', required: false, hint: 'A photo of Julia and Mark for the About page.'}
+          - {label: 'Photo alt text', name: 'photoAlt', widget: 'string', required: false, hint: 'Describes the photo for screen readers and SEO.'}
           - label: 'Bio (a few paragraphs)'
             name: 'body'
             widget: 'markdown'
