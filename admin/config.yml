@@ -270,7 +270,7 @@ collections:
         required: false
         hint: "If this testimonial is specifically about one of our cats, pick them here. The testimonial will appear on that cat's profile page too."
       - {label: 'Testimonial title (short headline)', name: 'testimonialTitle', widget: 'string', required: false, hint: "Short punchy quote used as the card headline. e.g. 'Every mile of our two-hour journey was worth it'. Do NOT wrap in quote marks — the site adds them for you."}
-      - {label: 'Comment', name: 'body', widget: 'text', hint: 'The full testimonial in the owner\'s words. A few sentences looks best on the site.'}
+      - {label: 'Comment', name: 'body', widget: 'text', hint: "The full testimonial in the owner's words. A few sentences looks best on the site."}
 
   # --------------------------------------------------------------------------
   #  SITE SETTINGS — business info, forms, and About page bio
