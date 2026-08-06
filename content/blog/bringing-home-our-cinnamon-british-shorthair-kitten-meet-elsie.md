@@ -51,7 +51,3 @@ Bringing Elsie home has reminded us exactly how our own kitten families feel whe
 We think it's important that, as breeders, we never forget what that experience feels like. It helps us understand our own families even better and reminds us why we put so much time, care and love into raising every kitten.
 
 So, welcome to the Little Paws by Miles family, Elsie.
-
-We already adore you, and we can't wait to watch you grow alongside our Ragdolls and Maine Coons. We have a feeling you're going to keep us smiling for many years to come. ❤️![Elsie, our cinnamon British Shorthair kitten, settling into her new home at Little Paws by Miles.](/images/blog/IMG_7086.jpeg "Bringing Home Our Cinnamon British Shorthair Kitten – Meet Elsie")
-
-![A gentle first introduction between Elsie, our cinnamon British Shorthair kitten, and one of our Maine Coon Queens at Little Paws by Miles](/images/blog/IMG_7083.jpeg "Elsie's First Meeting with Our Maine Coon Queen")
