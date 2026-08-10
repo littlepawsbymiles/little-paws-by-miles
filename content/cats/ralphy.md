@@ -14,6 +14,9 @@ siblings: []
 photos:
   - images/cats/ralphy/ralphy-001.webp
   - images/cats/ralphy/ralphy-002.webp
+  - /images/cats/b4e6ea8797c3/46b3e38c-327f-4a39-91c4-0c1b9114d8c4_400x400.webp
+  - /images/cats/3cd464b789f3/0244f553-9c22-46eb-96f3-025e8ea96982_400x400.webp
+  - /images/cats/5fc06a7e5f60/ed98246f-a6ca-4f54-970a-6127d611963f_400x400.webp
 ---
 
 ## About Ralphy
