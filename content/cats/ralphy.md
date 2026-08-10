@@ -14,9 +14,6 @@ siblings: []
 photos:
   - images/cats/ralphy/ralphy-001.webp
   - images/cats/ralphy/ralphy-002.webp
-  - /images/cats/35facddf1333/mo-ragdoll-kitten-ralphy-offspring-000.webp
-  - /images/cats/de9c9c5ccdbc/mo-ragdoll--best-in-show-2026-001.webp
-  - /images/cats/db5d05dc5282/mo-ragdoll-002.webp
 ---
 
 ## About Ralphy
