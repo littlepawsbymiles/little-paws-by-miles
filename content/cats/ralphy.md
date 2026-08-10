@@ -16,52 +16,53 @@ photos:
   - images/cats/ralphy/ralphy-002.webp
 ---
 
-## Meet Ralphy
+## About Ralphy
 
-Ralphy is our much-loved Seal Point Ragdoll stud here at Little Paws by Miles. Based in Leeds, West Yorkshire, we welcome healthy, fully vaccinated queens from across the UK.
+### Meet Ralphy
 
-He's a large, chunky boy with rich seal-brown points on a soft creamy coat, deep sapphire-blue eyes, a full neck ruff, flowing breeches and a magnificent plume tail. Alongside his striking looks, he has the gentle, affectionate teddy-bear personality that makes the Ragdoll breed so special.
+Ralphy is our much-loved Seal Point Ragdoll stud here at Little Paws by Miles in Leeds, West Yorkshire. We welcome healthy, fully vaccinated queens from across the UK.
 
-Ralphy is dual registered with both the GCCF and TICA, and we're incredibly proud that he is officially listed on the GCCF Stud Register. Being included on the GCCF Stud Register is something we're very proud of. It reflects our commitment to responsible breeding, comprehensive health testing and maintaining the high standards expected by the GCCF.
+He's a large, chunky boy with rich seal-brown points, a soft creamy coat, deep blue eyes, a full neck ruff, flowing breeches and a lovely full tail. He also has the gentle, affectionate nature that we love so much about Ragdolls.
 
-## Award-Winning Offspring
+Ralphy is registered with both the GCCF and TICA and is officially listed on the GCCF Stud Register. We're particularly proud that he's been accepted onto the GCCF Stud Register.
 
-One of the proudest moments in our breeding journey came in July 2026 when one of Ralphy's kittens, Mo, attended his very first British Ragdoll Cat Club Championship Show. Competing against 16 beautiful Ragdoll kittens, Mo was awarded both Best of Breed and Best in Show.
+### Award-Winning Offspring
 
-As breeders, there's nothing more rewarding than seeing kittens you've bred go on to achieve something special. We were absolutely delighted for Mo and his owners, and we feel his success is a wonderful reflection of the lovely breed type, temperament and quality that Ralphy consistently passes on to his kittens.
+In July 2026, one of Ralphy's kittens, Mo, attended his first British Ragdoll Cat Club Championship Show. He competed alongside 16 Ragdoll kittens and was awarded both Best of Breed and Best in Show.
 
-Ralphy also carries both chocolate and dilute, making him an excellent choice for breeders looking to introduce these desirable genes into their breeding programme. He is a proven Ragdoll stud with excellent fertility and has consistently sired healthy litters averaging six to seven kittens, including a recent litter of eight healthy kittens.
+We were absolutely delighted for Mo and his owners. Seeing one of Ralphy's kittens do so well at his very first show was a very proud moment for us.
 
-## Temperament
+Ralphy carries both chocolate and dilute, which can be useful when planning particular colour combinations. He is a proven Ragdoll stud and has sired a number of litters, usually of around six to seven kittens, with one recent litter of eight.
 
-One of the reasons we love Ralphy so much is his wonderful nature. He's calm, gentle and loves being around people. Despite being an entire stud, he has a relaxed, easy-going temperament and settles visiting queens with patience and confidence.
+### Temperament
 
-Whether you're an experienced breeder or using a stud for the first time, we want both you and your queen to feel comfortable from the moment you get in touch. Every visiting queen is cared for as if she were one of our own, and we'll keep you updated throughout her stay with regular photos and videos.
+Ralphy is a calm, gentle and very affectionate boy who loves being around people. For an entire male, he's very easy-going and is patient with visiting queens while they settle in.
 
-## Health & Testing
+We know leaving your queen with someone else can feel a little daunting, particularly if it's your first time using a stud. Visiting queens are given time to settle and are cared for as we would care for our own cats. We'll also send photos and videos during her stay so you can see how she's getting on.
 
-Responsible breeding starts with health, which is why Ralphy has been comprehensively health tested.
+### Health & Testing
 
-- GCCF & TICA Dual Registered
-- Officially Listed on the GCCF Stud Register
-- SNAP Tested (11/02/2026)
-- HCMrd Clear (04/02/2025)
-- PKD1 Clear
-- FIV / FeLV Negative
-- Blood Type A or AB (no B)
-- Chocolate Carrier (B/b)
-- Dilute Carrier
-- Inbreeding Coefficient: 5.68%
+Ralphy has been health tested before being used for breeding.
+
+- GCCF and TICA registered
+- Officially listed on the GCCF Stud Register
+- SNAP tested, 11th February 2026
+- HCMrd clear, 4th February 2025
+- PKD1 clear
+- FIV / FeLV negative
+- Blood type A/AB
+- Chocolate carrier, B/b
+- Dilute carrier, D/d
+- Inbreeding coefficient: 5.68%
 - Full 5-generation GCCF pedigree
-- Championship bloodlines with proven breed type
 - Fully vaccinated, wormed and flea treated
 
-## Stud Service
+### Stud Service
 
-Our aim is to make your queen's stay as relaxed and stress-free as possible. She'll stay in a safe, clean and caring home where her comfort and wellbeing always come first.
+Our usual Ragdoll stud stay is three to four days, although every queen is different and we're happy to work around how she settles and when she is ready.
 
-Our usual stud stay is three to four days, although this can vary depending on your queen. During her stay we'll keep you updated with regular photos and videos, provide a mating certificate before she goes home and, if needed, offer a complimentary return mating within eight weeks.
+During her stay we'll send regular photos and videos. Before she goes home, we'll provide her mating certificate along with Ralphy's health test information and pedigree. If she doesn't become pregnant, we also offer a complimentary return mating within eight weeks.
 
-At Little Paws by Miles, we believe responsible breeding is about far more than producing beautiful kittens. Health, temperament and supporting fellow breeders are at the heart of everything we do.
+We try to keep the whole process straightforward and relaxed for both the queen and her owner. Visiting queens are given plenty of time to settle and their comfort and wellbeing come first throughout their stay.
 
-If you'd like to find out more about Ralphy, discuss whether he would be a suitable match for your queen or arrange a stud visit, we'd love to hear from you. You can also explore the rest of our website to learn more about our breeding programme, health testing, previous litters and testimonials from families and breeders who have trusted Little Paws by Miles.
+If you'd like to know more about Ralphy or talk through whether he might be a suitable match for your queen, please get in touch. You can also have a look through our previous litters and stud reviews to see a little more about him and the kittens he has sired.
